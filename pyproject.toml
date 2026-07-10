@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epistemic-forge"
+version = "0.1.0"
+description = "ARSENAL-powered epistemic research kit: claims, dialectics, freelancing briefs, and Kaggle notebooks"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Fares Rafat" }]
+keywords = [
+  "research",
+  "philosophy",
+  "writing",
+  "prompt-engineering",
+  "kaggle",
+  "freelance",
+  "llm-agents",
+  "arsenal",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Text Processing :: Linguistic",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+epistemic-forge = "epistemic_forge.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/faresrafat3/epistemic-forge"
+Repository = "https://github.com/faresrafat3/epistemic-forge"
+Issues = "https://github.com/faresrafat3/epistemic-forge/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["epistemic_forge*"]
+
+[tool.setuptools.package-data]
+epistemic_forge = ["data/samples/*.json", "data/samples/*.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

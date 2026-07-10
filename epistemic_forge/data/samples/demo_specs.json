@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Predictive processing and responsibility",
+    "question": "If the brain is a prediction machine, what happens to moral responsibility?",
+    "domain": "philosophy",
+    "keywords": ["predictive processing", "responsibility", "agency"]
+  },
+  {
+    "title": "Freelance research sprint",
+    "question": "How do I scope a 2-week research sprint for a climate-tech startup founder?",
+    "domain": "freelance",
+    "keywords": ["sprint", "climate", "scope"]
+  },
+  {
+    "title": "Tabular competition baseline",
+    "question": "What is a honest baseline plan for a noisy tabular Kaggle competition with class imbalance?",
+    "domain": "kaggle",
+    "keywords": ["imbalance", "baseline", "cv", "leakage"]
+  }
+]
