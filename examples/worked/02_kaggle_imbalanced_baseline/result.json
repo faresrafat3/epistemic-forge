@@ -1,0 +1,418 @@
+{
+  "spec": {
+    "title": "Honest baseline for imbalanced tabular Kaggle",
+    "question": "What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk?",
+    "domain": "kaggle",
+    "audience": "competition teammate / hiring manager reading a notebook",
+    "constraints": [],
+    "keywords": [
+      "imbalance",
+      "baseline",
+      "cv",
+      "leakage",
+      "metric"
+    ],
+    "budget_tokens": 8000,
+    "max_trials": 2,
+    "enable_opro_style": true,
+    "enable_skills": true
+  },
+  "route": {
+    "families": [
+      "In-Context Learning",
+      "Agents",
+      "Self-Criticism",
+      "Answer Engineering"
+    ],
+    "activate": {
+      "ape": true,
+      "opro": false,
+      "meta": true,
+      "tot": true,
+      "lats": true,
+      "refine": true,
+      "reflexion": true,
+      "voyager": true,
+      "stages": true
+    },
+    "rationale": "code/Kaggle → agent loops + skill memory + ToT→LATS cascade; skill library enabled for procedural reuse",
+    "l1_mode": "ape",
+    "l3_mode": "cascade"
+  },
+  "instruction": "For the question «What is an honest baseline plan for a noisy imbalanced Kaggle table where leakag»: Competition notebook spine: EDA → baseline → CV → error analysis → one honest improvement.",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "Core thesis addressing: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk?",
+      "support": [
+        "Aligned with instruction: For the question «What is an honest baseline plan for a noisy imbalanced Kaggle table where leakag»: Competition noteboo...",
+        "Keywords in play: imbalance, baseline, cv, leakage, metric"
+      ],
+      "objections": [
+        "The framing may smuggle unstated assumptions about the audience.",
+        "Evidence quality is not yet measured; confidence should stay provisional."
+      ],
+      "confidence": "likely",
+      "sources": [
+        "user-question",
+        "instruction"
+      ],
+      "tags": [
+        "thesis"
+      ]
+    },
+    {
+      "id": "C2",
+      "text": "Working support: a structured approach to «Honest baseline for imbalanced tabular Kaggle» improves decision quality under uncertainty.",
+      "support": [
+        "Decomposition reduces hidden tradeoffs.",
+        "Explicit objections prevent one-sided writing."
+      ],
+      "objections": [
+        "Structure without domain data can become cargo-cult rigor."
+      ],
+      "confidence": "possible",
+      "sources": [],
+      "tags": [
+        "support"
+      ]
+    },
+    {
+      "id": "C3",
+      "text": "Residual uncertainty: which single metric or stakeholder criterion should dominate tradeoffs?",
+      "support": [
+        "Multi-objective problems need a declared primary criterion."
+      ],
+      "objections": [
+        "Premature metric fixation can distort the inquiry."
+      ],
+      "confidence": "weak",
+      "sources": [],
+      "tags": [
+        "uncertainty"
+      ]
+    }
+  ],
+  "search_trace": [
+    {
+      "id": "n0_0",
+      "thought": "Frame as Kaggle baseline+ablation: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk?",
+      "value": 0.65,
+      "parent_id": null,
+      "children": [
+        "n1_n0_0_0",
+        "n1_n0_0_1",
+        "n1_n0_0_2"
+      ],
+      "meta": {
+        "step": 0
+      }
+    },
+    {
+      "id": "n0_1",
+      "thought": "Frame as experiment plan: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk?",
+      "value": 0.65,
+      "parent_id": null,
+      "children": [
+        "n1_n0_1_0",
+        "n1_n0_1_1",
+        "n1_n0_1_2"
+      ],
+      "meta": {
+        "step": 0
+      }
+    },
+    {
+      "id": "n0_2",
+      "thought": "Frame as claim lattice: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk?",
+      "value": 0.65,
+      "parent_id": null,
+      "children": [
+        "n1_n0_2_0",
+        "n1_n0_2_1",
+        "n1_n0_2_2"
+      ],
+      "meta": {
+        "step": 0
+      }
+    },
+    {
+      "id": "n1_n0_0_0",
+      "thought": "Frame as Kaggle baseline+ablation: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → add falsifiers and residual unknowns.",
+      "value": 0.65,
+      "parent_id": "n0_0",
+      "children": [
+        "n2_n1_n0_0_0_0",
+        "n2_n1_n0_0_0_1",
+        "n2_n1_n0_0_0_2"
+      ],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_0_1",
+      "thought": "Frame as Kaggle baseline+ablation: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → prioritize one high-leverage next action.",
+      "value": 0.65,
+      "parent_id": "n0_0",
+      "children": [
+        "n2_n1_n0_0_1_0",
+        "n2_n1_n0_0_1_1",
+        "n2_n1_n0_0_1_2"
+      ],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_0_2",
+      "thought": "Frame as Kaggle baseline+ablation: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → stress-test with a steelman objection.",
+      "value": 0.65,
+      "parent_id": "n0_0",
+      "children": [
+        "n2_n1_n0_0_2_0",
+        "n2_n1_n0_0_2_1",
+        "n2_n1_n0_0_2_2"
+      ],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_1_0",
+      "thought": "Frame as experiment plan: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → add falsifiers and residual unknowns.",
+      "value": 0.65,
+      "parent_id": "n0_1",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_1_1",
+      "thought": "Frame as experiment plan: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → prioritize one high-leverage next action.",
+      "value": 0.65,
+      "parent_id": "n0_1",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_1_2",
+      "thought": "Frame as experiment plan: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → stress-test with a steelman objection.",
+      "value": 0.65,
+      "parent_id": "n0_1",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_2_0",
+      "thought": "Frame as claim lattice: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → add falsifiers and residual unknowns.",
+      "value": 0.65,
+      "parent_id": "n0_2",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_2_1",
+      "thought": "Frame as claim lattice: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → prioritize one high-leverage next action.",
+      "value": 0.65,
+      "parent_id": "n0_2",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_2_2",
+      "thought": "Frame as claim lattice: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → stress-test with a steelman objection.",
+      "value": 0.65,
+      "parent_id": "n0_2",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n2_n1_n0_0_0_0",
+      "thought": "Frame as Kaggle baseline+ablation: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → add falsifiers and residual unknowns. → add falsifiers and residual unknowns.",
+      "value": 0.65,
+      "parent_id": "n1_n0_0_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_0_0_1",
+      "thought": "Frame as Kaggle baseline+ablation: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → add falsifiers and residual unknowns. → prioritize one high-leverage next action.",
+      "value": 0.65,
+      "parent_id": "n1_n0_0_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_0_0_2",
+      "thought": "Frame as Kaggle baseline+ablation: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → add falsifiers and residual unknowns. → stress-test with a steelman objection.",
+      "value": 0.65,
+      "parent_id": "n1_n0_0_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_0_1_0",
+      "thought": "Frame as Kaggle baseline+ablation: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → prioritize one high-leverage next action. → add falsifiers and residual unknowns.",
+      "value": 0.65,
+      "parent_id": "n1_n0_0_1",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_0_1_1",
+      "thought": "Frame as Kaggle baseline+ablation: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → prioritize one high-leverage next action. → prioritize one high-leverage next action.",
+      "value": 0.65,
+      "parent_id": "n1_n0_0_1",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_0_1_2",
+      "thought": "Frame as Kaggle baseline+ablation: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → prioritize one high-leverage next action. → stress-test with a steelman objection.",
+      "value": 0.65,
+      "parent_id": "n1_n0_0_1",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_0_2_0",
+      "thought": "Frame as Kaggle baseline+ablation: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → stress-test with a steelman objection. → add falsifiers and residual unknowns.",
+      "value": 0.65,
+      "parent_id": "n1_n0_0_2",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_0_2_1",
+      "thought": "Frame as Kaggle baseline+ablation: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → stress-test with a steelman objection. → prioritize one high-leverage next action.",
+      "value": 0.65,
+      "parent_id": "n1_n0_0_2",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_0_2_2",
+      "thought": "Frame as Kaggle baseline+ablation: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? → stress-test with a steelman objection. → stress-test with a steelman objection.",
+      "value": 0.65,
+      "parent_id": "n1_n0_0_2",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "lats_best",
+      "thought": "Frame as Kaggle baseline+ablation: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? | rollout: Check CV leakage and metric alignment before fancy models.",
+      "value": 0.73,
+      "parent_id": null,
+      "children": [],
+      "meta": {
+        "mode": "lats_rollout",
+        "feedback": [
+          "Check CV leakage and metric alignment before fancy models."
+        ]
+      }
+    }
+  ],
+  "reflections": [
+    {
+      "trial": 1,
+      "failure_summary": "verdict=accept_with_minor_revisions; missing=[]",
+      "lesson": "Increase structure, epistemic humility, and domain-specific acceptance checks.",
+      "next_action": "Re-run L3 with broader framings and force L4 limit/action sections."
+    },
+    {
+      "trial": 2,
+      "failure_summary": "verdict=accept_with_minor_revisions; missing=[]",
+      "lesson": "Increase structure, epistemic humility, and domain-specific acceptance checks.",
+      "next_action": "Re-run L3 with broader framings and force L4 limit/action sections."
+    }
+  ],
+  "skills_used": [
+    "kaggle_baseline_spine"
+  ],
+  "artifacts": [
+    {
+      "name": "executive_summary",
+      "content": "# Executive summary — Honest baseline for imbalanced tabular Kaggle\n\n**Question:** What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk?\n\n**Framing:** Frame as Kaggle baseline+ablation: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? | rollout: Check CV leakage and metric alignment before fancy models.\n\n**Score:** 0.71 · **Review:** accept_with_minor_revisions\n\n**Instruction:** For the question «What is an honest baseline plan for a noisy imbalanced Kaggle table where leakag»: Competition notebook spine: EDA → baseline → CV → error analysis → one honest improvement.\n\n\n### Limits & unknowns\n- What would falsify the main claim?\n- Which assumptions are load-bearing?\n- Audience-specific risk for competition teammate / hiring manager reading a notebook.\n\n### Next actions\n1. One measurement or artifact to produce this week.\n2. One conversation or review to schedule.\n3. One scope cut if time is short.\n\n### Validation note\nReport metric mean±std under a leakage-safe split before claiming lift.",
+      "kind": "markdown",
+      "path_hint": "outputs/executive_summary.md"
+    },
+    {
+      "name": "research_memo",
+      "content": "# Honest baseline for imbalanced tabular Kaggle\n\nWhat is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk?\n\n\n## Deliberate framing (L3)\nFrame as Kaggle baseline+ablation: What is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk? | rollout: Check CV leakage and metric alignment before fancy models.\n\n## Trial memory (L5)\nNo prior trial lessons.\n\n## Skills invoked\n- kaggle_baseline_spine\n\n## Kaggle plan\nmetric alignment, leakage audit, baseline CV, error analysis, single ablation\n\n\n### Limits & unknowns\n- What would falsify the main claim?\n- Which assumptions are load-bearing?\n- Audience-specific risk for competition teammate / hiring manager reading a notebook.\n\n### Next actions\n1. One measurement or artifact to produce this week.\n2. One conversation or review to schedule.\n3. One scope cut if time is short.\n\n### Validation note\nReport metric mean±std under a leakage-safe split before claiming lift.\n\n### Limits & unknowns\n- What would falsify the main claim?\n- Which assumptions are load-bearing?\n- Audience-specific risk for competition teammate / hiring manager reading a notebook.\n\n### Next actions\n1. One measurement or artifact to produce this week.\n2. One conversation or review to schedule.\n3. One scope cut if time is short.\n\n### Validation note\nReport metric mean±std under a leakage-safe split before claiming lift.\n\n### Limits & unknowns\n- What would falsify the main claim?\n- Which assumptions are load-bearing?\n- Audience-specific risk for competition teammate / hiring manager reading a notebook.\n\n### Next actions\n1. One measurement or artifact to produce this week.\n2. One conversation or review to schedule.\n3. One scope cut if time is short.\n\n### Validation note\nReport metric mean±std under a leakage-safe split before claiming lift.",
+      "kind": "markdown",
+      "path_hint": "outputs/research_memo.md"
+    },
+    {
+      "name": "instruction_used",
+      "content": "For the question «What is an honest baseline plan for a noisy imbalanced Kaggle table where leakag»: Competition notebook spine: EDA → baseline → CV → error analysis → one honest improvement.",
+      "kind": "markdown",
+      "path_hint": "outputs/instruction.md"
+    },
+    {
+      "name": "kaggle_notebook_md",
+      "content": "# Honest baseline for imbalanced tabular Kaggle — Kaggle Spine\n\n## Problem\nWhat is an honest baseline plan for a noisy imbalanced Kaggle table where leakage is a real risk?\n\n## Skills retrieved\nkaggle_baseline_spine\n\n## Plan\n1. **Define target & metric** — match leaderboard metric exactly.\n2. **Leakage audit** — time, group, target leakage checks.\n3. **EDA** — missingness, cardinality, target balance, simple slices.\n4. **Baseline** — linear/GBDT simple pipeline; record CV mean±std.\n5. **Error analysis** — where does baseline fail?\n6. **One improvement** — single ablated idea; measure lift.\n7. **Ship** — reproducible seeds, requirements, README.\n\n## Skeleton code\n```python\nimport numpy as np\nimport pandas as pd\nfrom sklearn.model_selection import StratifiedKFold, cross_val_score\nfrom sklearn.pipeline import Pipeline\nfrom sklearn.compose import ColumnTransformer\nfrom sklearn.preprocessing import OneHotEncoder\nfrom sklearn.impute import SimpleImputer\nfrom sklearn.ensemble import HistGradientBoostingClassifier\n\n# df = pd.read_csv('train.csv')\n# y = df['target']\n# X = df.drop(columns=['target'])\n\n# num_cols = X.select_dtypes(include='number').columns\n# cat_cols = X.select_dtypes(exclude='number').columns\n# pre = ColumnTransformer([\n#     ('num', SimpleImputer(strategy='median'), num_cols),\n#     ('cat', Pipeline([\n#         ('imp', SimpleImputer(strategy='most_frequent')),\n#         ('oh', OneHotEncoder(handle_unknown='ignore')),\n#     ]), cat_cols),\n# ])\n# clf = Pipeline([('pre', pre), ('model', HistGradientBoostingClassifier(random_state=42))])\n# cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)\n# scores = cross_val_score(clf, X, y, cv=cv, scoring='roc_auc')\n# print(scores.mean(), scores.std())\n```\n\n## Honest claims checklist\n- [ ] Metric matches competition\n- [ ] Split policy documented\n- [ ] No target leakage features\n- [ ] Baseline before complexity\n",
+      "kind": "notebook-md",
+      "path_hint": "outputs/kaggle_spine.md"
+    },
+    {
+      "name": "baseline_snippet_py",
+      "content": "\"\"\"Generated baseline snippet for local experimentation.\"\"\"\ndef describe_plan():\n    return ['EDA', 'baseline', 'CV', 'error analysis', 'one ablation']\n",
+      "kind": "python",
+      "path_hint": "outputs/baseline_plan.py"
+    }
+  ],
+  "peer_review": {
+    "scores": {
+      "clarity": 0.7,
+      "structure": 0.8,
+      "soundness": 0.855,
+      "actionability": 0.75,
+      "humility": 0.8
+    },
+    "overall": 0.781,
+    "revision_needed": [],
+    "verdict": "accept_with_minor_revisions"
+  },
+  "trial_log": [
+    {
+      "trial": 1,
+      "score": 0.71,
+      "review": "accept_with_minor_revisions",
+      "instruction_preview": "For the question «What is an honest baseline plan for a noisy imbalanced Kaggle table where leakag»: Competition notebook spine: EDA → baseline → CV → error ana",
+      "l1_mode": "ape",
+      "l3_mode": "cascade_tot_lats",
+      "n_candidates": 5
+    }
+  ],
+  "final_score": 0.71
+}

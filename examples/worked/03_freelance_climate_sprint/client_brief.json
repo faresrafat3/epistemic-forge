@@ -1,0 +1,57 @@
+{
+  "client_brief": {
+    "goal": "How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome?",
+    "title": "2-week climate-tech research sprint",
+    "audience": "startup founder (non-technical board pressure)",
+    "constraints": [
+      "TBD with client"
+    ],
+    "keywords": [
+      "sprint",
+      "scope",
+      "founder",
+      "deliverable",
+      "acceptance"
+    ]
+  },
+  "scope": {
+    "in_scope": [
+      "Discovery memo with claim lattice",
+      "One primary deliverable draft",
+      "Revision checklist"
+    ],
+    "out_of_scope": [
+      "Unlimited revisions",
+      "Unrelated brand strategy",
+      "Production deployment without separate SOW"
+    ],
+    "assumptions": [
+      "Client provides access to source materials within 48h",
+      "Primary language is English unless specified"
+    ]
+  },
+  "milestones": [
+    {
+      "name": "Kickoff + intake",
+      "days": 2
+    },
+    {
+      "name": "Claim lattice + outline",
+      "days": 4
+    },
+    {
+      "name": "Draft v1",
+      "days": 7
+    },
+    {
+      "name": "Revision + handoff",
+      "days": 10
+    }
+  ],
+  "acceptance_criteria": [
+    "Answers the core question in plain language",
+    "Lists assumptions and risks explicitly",
+    "Includes next actions the client can execute"
+  ],
+  "proposal_spine": "You need clarity on \u00ab2-week climate-tech research sprint\u00bb. I will turn the fog into a claim lattice, a decision-ready memo, and a scoped next step\u2014so you can act without false certainty."
+}

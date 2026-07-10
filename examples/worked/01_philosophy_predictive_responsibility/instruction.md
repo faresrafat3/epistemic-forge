@@ -1,0 +1,1 @@
+For the question «If the brain is a prediction machine, what happens to moral responsibility?»: Run a steelman-then-critique: strongest opposing view first, then precise fracture points.

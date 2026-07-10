@@ -1,0 +1,414 @@
+{
+  "spec": {
+    "title": "2-week climate-tech research sprint",
+    "question": "How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome?",
+    "domain": "freelance",
+    "audience": "startup founder (non-technical board pressure)",
+    "constraints": [],
+    "keywords": [
+      "sprint",
+      "scope",
+      "founder",
+      "deliverable",
+      "acceptance"
+    ],
+    "budget_tokens": 8000,
+    "max_trials": 2,
+    "enable_opro_style": true,
+    "enable_skills": true
+  },
+  "route": {
+    "families": [
+      "In-Context Learning",
+      "Agents",
+      "Self-Criticism",
+      "Answer Engineering"
+    ],
+    "activate": {
+      "ape": true,
+      "opro": false,
+      "meta": true,
+      "tot": true,
+      "lats": true,
+      "refine": true,
+      "reflexion": true,
+      "voyager": true,
+      "stages": true
+    },
+    "rationale": "code/Kaggle → agent loops + skill memory + ToT→LATS cascade; client deliverables → structured extraction + polish; skill library enabled for procedural reuse",
+    "l1_mode": "ape",
+    "l3_mode": "cascade"
+  },
+  "instruction": "For the question «How do I scope a 2-week research sprint for a climate-tech founder who needs dec»: Client brief mode: goal, constraints, deliverables, timeline, risks, acceptance criteria, open questions.",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "Core thesis addressing: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome?",
+      "support": [
+        "Aligned with instruction: For the question «How do I scope a 2-week research sprint for a climate-tech founder who needs dec»: Client brief mode: ...",
+        "Keywords in play: sprint, scope, founder, deliverable, acceptance"
+      ],
+      "objections": [
+        "The framing may smuggle unstated assumptions about the audience.",
+        "Evidence quality is not yet measured; confidence should stay provisional."
+      ],
+      "confidence": "likely",
+      "sources": [
+        "user-question",
+        "instruction"
+      ],
+      "tags": [
+        "thesis"
+      ]
+    },
+    {
+      "id": "C2",
+      "text": "Working support: a structured approach to «2-week climate-tech research sprint» improves decision quality under uncertainty.",
+      "support": [
+        "Decomposition reduces hidden tradeoffs.",
+        "Explicit objections prevent one-sided writing."
+      ],
+      "objections": [
+        "Structure without domain data can become cargo-cult rigor."
+      ],
+      "confidence": "possible",
+      "sources": [],
+      "tags": [
+        "support"
+      ]
+    },
+    {
+      "id": "C3",
+      "text": "Residual uncertainty: which single metric or stakeholder criterion should dominate tradeoffs?",
+      "support": [
+        "Multi-objective problems need a declared primary criterion."
+      ],
+      "objections": [
+        "Premature metric fixation can distort the inquiry."
+      ],
+      "confidence": "weak",
+      "sources": [],
+      "tags": [
+        "uncertainty"
+      ]
+    }
+  ],
+  "search_trace": [
+    {
+      "id": "n0_0",
+      "thought": "Frame as client narrative: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome?",
+      "value": 0.5,
+      "parent_id": null,
+      "children": [
+        "n1_n0_0_0",
+        "n1_n0_0_1",
+        "n1_n0_0_2"
+      ],
+      "meta": {
+        "step": 0
+      }
+    },
+    {
+      "id": "n0_1",
+      "thought": "Frame as claim lattice: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome?",
+      "value": 0.5,
+      "parent_id": null,
+      "children": [
+        "n1_n0_1_0",
+        "n1_n0_1_1",
+        "n1_n0_1_2"
+      ],
+      "meta": {
+        "step": 0
+      }
+    },
+    {
+      "id": "n0_2",
+      "thought": "Frame as experiment plan: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome?",
+      "value": 0.5,
+      "parent_id": null,
+      "children": [
+        "n1_n0_2_0",
+        "n1_n0_2_1",
+        "n1_n0_2_2"
+      ],
+      "meta": {
+        "step": 0
+      }
+    },
+    {
+      "id": "n1_n0_0_0",
+      "thought": "Frame as client narrative: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → add falsifiers and residual unknowns.",
+      "value": 0.65,
+      "parent_id": "n0_0",
+      "children": [
+        "n2_n1_n0_0_0_0",
+        "n2_n1_n0_0_0_1",
+        "n2_n1_n0_0_0_2"
+      ],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_0_1",
+      "thought": "Frame as client narrative: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → prioritize one high-leverage next action.",
+      "value": 0.5,
+      "parent_id": "n0_0",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_0_2",
+      "thought": "Frame as client narrative: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → stress-test with a steelman objection.",
+      "value": 0.5,
+      "parent_id": "n0_0",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_1_0",
+      "thought": "Frame as claim lattice: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → add falsifiers and residual unknowns.",
+      "value": 0.65,
+      "parent_id": "n0_1",
+      "children": [
+        "n2_n1_n0_1_0_0",
+        "n2_n1_n0_1_0_1",
+        "n2_n1_n0_1_0_2"
+      ],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_1_1",
+      "thought": "Frame as claim lattice: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → prioritize one high-leverage next action.",
+      "value": 0.5,
+      "parent_id": "n0_1",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_1_2",
+      "thought": "Frame as claim lattice: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → stress-test with a steelman objection.",
+      "value": 0.5,
+      "parent_id": "n0_1",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_2_0",
+      "thought": "Frame as experiment plan: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → add falsifiers and residual unknowns.",
+      "value": 0.65,
+      "parent_id": "n0_2",
+      "children": [
+        "n2_n1_n0_2_0_0",
+        "n2_n1_n0_2_0_1",
+        "n2_n1_n0_2_0_2"
+      ],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_2_1",
+      "thought": "Frame as experiment plan: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → prioritize one high-leverage next action.",
+      "value": 0.5,
+      "parent_id": "n0_2",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_2_2",
+      "thought": "Frame as experiment plan: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → stress-test with a steelman objection.",
+      "value": 0.5,
+      "parent_id": "n0_2",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n2_n1_n0_0_0_0",
+      "thought": "Frame as client narrative: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → add falsifiers and residual unknowns. → add falsifiers and residual unknowns.",
+      "value": 0.65,
+      "parent_id": "n1_n0_0_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_0_0_1",
+      "thought": "Frame as client narrative: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → add falsifiers and residual unknowns. → prioritize one high-leverage next action.",
+      "value": 0.65,
+      "parent_id": "n1_n0_0_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_0_0_2",
+      "thought": "Frame as client narrative: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → add falsifiers and residual unknowns. → stress-test with a steelman objection.",
+      "value": 0.65,
+      "parent_id": "n1_n0_0_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_1_0_0",
+      "thought": "Frame as claim lattice: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → add falsifiers and residual unknowns. → add falsifiers and residual unknowns.",
+      "value": 0.65,
+      "parent_id": "n1_n0_1_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_1_0_1",
+      "thought": "Frame as claim lattice: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → add falsifiers and residual unknowns. → prioritize one high-leverage next action.",
+      "value": 0.65,
+      "parent_id": "n1_n0_1_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_1_0_2",
+      "thought": "Frame as claim lattice: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → add falsifiers and residual unknowns. → stress-test with a steelman objection.",
+      "value": 0.65,
+      "parent_id": "n1_n0_1_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_2_0_0",
+      "thought": "Frame as experiment plan: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → add falsifiers and residual unknowns. → add falsifiers and residual unknowns.",
+      "value": 0.65,
+      "parent_id": "n1_n0_2_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_2_0_1",
+      "thought": "Frame as experiment plan: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → add falsifiers and residual unknowns. → prioritize one high-leverage next action.",
+      "value": 0.65,
+      "parent_id": "n1_n0_2_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_2_0_2",
+      "thought": "Frame as experiment plan: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → add falsifiers and residual unknowns. → stress-test with a steelman objection.",
+      "value": 0.65,
+      "parent_id": "n1_n0_2_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "lats_best",
+      "thought": "Frame as client narrative: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → add falsifiers and residual unknowns. | rollout: Add acceptance criteria and revision policy.",
+      "value": 0.73,
+      "parent_id": null,
+      "children": [],
+      "meta": {
+        "mode": "lats_rollout",
+        "feedback": [
+          "Add acceptance criteria and revision policy."
+        ]
+      }
+    }
+  ],
+  "reflections": [
+    {
+      "trial": 1,
+      "failure_summary": "verdict=accept_with_minor_revisions; missing=[]",
+      "lesson": "Increase structure, epistemic humility, and domain-specific acceptance checks.",
+      "next_action": "Re-run L3 with broader framings and force L4 limit/action sections."
+    },
+    {
+      "trial": 2,
+      "failure_summary": "verdict=accept_with_minor_revisions; missing=[]",
+      "lesson": "Increase structure, epistemic humility, and domain-specific acceptance checks.",
+      "next_action": "Re-run L3 with broader framings and force L4 limit/action sections."
+    }
+  ],
+  "skills_used": [
+    "client_scope_box",
+    "peer_review_rubric",
+    "claim_lattice_v1"
+  ],
+  "artifacts": [
+    {
+      "name": "executive_summary",
+      "content": "# Executive summary — 2-week climate-tech research sprint\n\n**Question:** How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome?\n\n**Framing:** Frame as client narrative: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → add falsifiers and residual unknowns. | rollout: Add acceptance criteria and revision policy.\n\n**Score:** 0.71 · **Review:** accept_with_minor_revisions\n\n**Instruction:** For the question «How do I scope a 2-week research sprint for a climate-tech founder who needs dec»: Client brief mode: goal, constraints, deliverables, timeline, risks, acceptance criteria, open questions.\n\n\n### Limits & unknowns\n- What would falsify the main claim?\n- Which assumptions are load-bearing?\n- Audience-specific risk for startup founder (non-technical board pressure).\n\n### Next actions\n1. One measurement or artifact to produce this week.\n2. One conversation or review to schedule.\n3. One scope cut if time is short.\n\n### Acceptance criteria\n- Deliverable format\n- Revision rounds\n- Definition of done",
+      "kind": "markdown",
+      "path_hint": "outputs/executive_summary.md"
+    },
+    {
+      "name": "research_memo",
+      "content": "# 2-week climate-tech research sprint\n\nHow do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome?\n\n\n## Deliberate framing (L3)\nFrame as client narrative: How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome? → add falsifiers and residual unknowns. | rollout: Add acceptance criteria and revision policy.\n\n## Trial memory (L5)\nNo prior trial lessons.\n\n## Skills invoked\n- client_scope_box\n- peer_review_rubric\n- claim_lattice_v1\n\n## Client pack\n**Proposal spine:** You need clarity on «2-week climate-tech research sprint». I will turn the fog into a claim lattice, a decision-ready memo, and a scoped next step—so you can act without false certainty.\n\n**In scope:** Discovery memo with claim lattice, One primary deliverable draft, Revision checklist\n\n**Acceptance:** Answers the core question in plain language, Lists assumptions and risks explicitly, Includes next actions the client can execute\n\n\n### Limits & unknowns\n- What would falsify the main claim?\n- Which assumptions are load-bearing?\n- Audience-specific risk for startup founder (non-technical board pressure).\n\n### Next actions\n1. One measurement or artifact to produce this week.\n2. One conversation or review to schedule.\n3. One scope cut if time is short.\n\n### Acceptance criteria\n- Deliverable format\n- Revision rounds\n- Definition of done\n\n### Limits & unknowns\n- What would falsify the main claim?\n- Which assumptions are load-bearing?\n- Audience-specific risk for startup founder (non-technical board pressure).\n\n### Next actions\n1. One measurement or artifact to produce this week.\n2. One conversation or review to schedule.\n3. One scope cut if time is short.\n\n### Acceptance criteria\n- Deliverable format\n- Revision rounds\n- Definition of done\n\n### Limits & unknowns\n- What would falsify the main claim?\n- Which assumptions are load-bearing?\n- Audience-specific risk for startup founder (non-technical board pressure).\n\n### Next actions\n1. One measurement or artifact to produce this week.\n2. One conversation or review to schedule.\n3. One scope cut if time is short.\n\n### Acceptance criteria\n- Deliverable format\n- Revision rounds\n- Definition of done",
+      "kind": "markdown",
+      "path_hint": "outputs/research_memo.md"
+    },
+    {
+      "name": "instruction_used",
+      "content": "For the question «How do I scope a 2-week research sprint for a climate-tech founder who needs dec»: Client brief mode: goal, constraints, deliverables, timeline, risks, acceptance criteria, open questions.",
+      "kind": "markdown",
+      "path_hint": "outputs/instruction.md"
+    },
+    {
+      "name": "client_brief_json",
+      "content": "{\n  \"client_brief\": {\n    \"goal\": \"How do I scope a 2-week research sprint for a climate-tech founder who needs decision-ready clarity, not an academic tome?\",\n    \"title\": \"2-week climate-tech research sprint\",\n    \"audience\": \"startup founder (non-technical board pressure)\",\n    \"constraints\": [\n      \"TBD with client\"\n    ],\n    \"keywords\": [\n      \"sprint\",\n      \"scope\",\n      \"founder\",\n      \"deliverable\",\n      \"acceptance\"\n    ]\n  },\n  \"scope\": {\n    \"in_scope\": [\n      \"Discovery memo with claim lattice\",\n      \"One primary deliverable draft\",\n      \"Revision checklist\"\n    ],\n    \"out_of_scope\": [\n      \"Unlimited revisions\",\n      \"Unrelated brand strategy\",\n      \"Production deployment without separate SOW\"\n    ],\n    \"assumptions\": [\n      \"Client provides access to source materials within 48h\",\n      \"Primary language is English unless specified\"\n    ]\n  },\n  \"milestones\": [\n    {\n      \"name\": \"Kickoff + intake\",\n      \"days\": 2\n    },\n    {\n      \"name\": \"Claim lattice + outline\",\n      \"days\": 4\n    },\n    {\n      \"name\": \"Draft v1\",\n      \"days\": 7\n    },\n    {\n      \"name\": \"Revision + handoff\",\n      \"days\": 10\n    }\n  ],\n  \"acceptance_criteria\": [\n    \"Answers the core question in plain language\",\n    \"Lists assumptions and risks explicitly\",\n    \"Includes next actions the client can execute\"\n  ],\n  \"proposal_spine\": \"You need clarity on \\u00ab2-week climate-tech research sprint\\u00bb. I will turn the fog into a claim lattice, a decision-ready memo, and a scoped next step\\u2014so you can act without false certainty.\"\n}",
+      "kind": "json",
+      "path_hint": "outputs/client_brief.json"
+    }
+  ],
+  "peer_review": {
+    "scores": {
+      "clarity": 0.7,
+      "structure": 0.8,
+      "soundness": 0.855,
+      "actionability": 0.75,
+      "humility": 0.8
+    },
+    "overall": 0.781,
+    "revision_needed": [],
+    "verdict": "accept_with_minor_revisions"
+  },
+  "trial_log": [
+    {
+      "trial": 1,
+      "score": 0.71,
+      "review": "accept_with_minor_revisions",
+      "instruction_preview": "For the question «How do I scope a 2-week research sprint for a climate-tech founder who needs dec»: Client brief mode: goal, constraints, deliverables, timelin",
+      "l1_mode": "ape",
+      "l3_mode": "cascade_tot_lats",
+      "n_candidates": 5
+    }
+  ],
+  "final_score": 0.71
+}

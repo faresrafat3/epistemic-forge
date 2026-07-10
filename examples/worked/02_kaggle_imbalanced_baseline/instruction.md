@@ -1,0 +1,1 @@
+For the question «What is an honest baseline plan for a noisy imbalanced Kaggle table where leakag»: Competition notebook spine: EDA → baseline → CV → error analysis → one honest improvement.

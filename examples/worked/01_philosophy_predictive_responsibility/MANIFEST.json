@@ -1,0 +1,46 @@
+{
+  "title": "Predictive processing and moral responsibility",
+  "domain": "philosophy",
+  "score": 0.6599999999999999,
+  "review": {
+    "scores": {
+      "clarity": 0.7,
+      "structure": 0.8,
+      "soundness": 0.83,
+      "actionability": 0.75,
+      "humility": 0.8
+    },
+    "overall": 0.776,
+    "revision_needed": [],
+    "verdict": "accept_with_minor_revisions"
+  },
+  "files": [
+    "outputs/executive_summary.md",
+    "outputs/research_memo.md",
+    "outputs/instruction.md"
+  ],
+  "route": {
+    "families": [
+      "In-Context Learning",
+      "Thought Generation",
+      "Decomposition",
+      "Self-Criticism",
+      "Ensembling"
+    ],
+    "activate": {
+      "ape": true,
+      "opro": true,
+      "meta": true,
+      "tot": true,
+      "lats": false,
+      "refine": true,
+      "reflexion": true,
+      "voyager": false,
+      "stages": true
+    },
+    "rationale": "conceptual work \u2192 CoT + decomposition + critique; open-ended \u2192 optional OPRO-style instruction climb",
+    "l1_mode": "cascade",
+    "l3_mode": "tot"
+  },
+  "instruction": "For the question \u00abIf the brain is a prediction machine, what happens to moral responsibility?\u00bb: Run a steelman-then-critique: strongest opposing view first, then precise fracture points."
+}

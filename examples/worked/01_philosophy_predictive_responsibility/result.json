@@ -1,0 +1,391 @@
+{
+  "spec": {
+    "title": "Predictive processing and moral responsibility",
+    "question": "If the brain is a prediction machine, what happens to moral responsibility?",
+    "domain": "philosophy",
+    "audience": "philosophy seminar + curious technologists",
+    "constraints": [],
+    "keywords": [
+      "predictive processing",
+      "responsibility",
+      "agency",
+      "blame"
+    ],
+    "budget_tokens": 8000,
+    "max_trials": 2,
+    "enable_opro_style": true,
+    "enable_skills": true
+  },
+  "route": {
+    "families": [
+      "In-Context Learning",
+      "Thought Generation",
+      "Decomposition",
+      "Self-Criticism",
+      "Ensembling"
+    ],
+    "activate": {
+      "ape": true,
+      "opro": true,
+      "meta": true,
+      "tot": true,
+      "lats": false,
+      "refine": true,
+      "reflexion": true,
+      "voyager": false,
+      "stages": true
+    },
+    "rationale": "conceptual work → CoT + decomposition + critique; open-ended → optional OPRO-style instruction climb",
+    "l1_mode": "cascade",
+    "l3_mode": "tot"
+  },
+  "instruction": "For the question «If the brain is a prediction machine, what happens to moral responsibility?»: Run a steelman-then-critique: strongest opposing view first, then precise fracture points.",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "Core thesis addressing: If the brain is a prediction machine, what happens to moral responsibility?",
+      "support": [
+        "Aligned with instruction: For the question «If the brain is a prediction machine, what happens to moral responsibility?»: Run a steelman-then-crit...",
+        "Keywords in play: predictive processing, responsibility, agency, blame"
+      ],
+      "objections": [
+        "The framing may smuggle unstated assumptions about the audience.",
+        "Evidence quality is not yet measured; confidence should stay provisional."
+      ],
+      "confidence": "likely",
+      "sources": [
+        "user-question",
+        "instruction"
+      ],
+      "tags": [
+        "thesis"
+      ]
+    },
+    {
+      "id": "C2",
+      "text": "Working support: a structured approach to «Predictive processing and moral responsibility» improves decision quality under uncertainty.",
+      "support": [
+        "Decomposition reduces hidden tradeoffs.",
+        "Explicit objections prevent one-sided writing."
+      ],
+      "objections": [
+        "Structure without domain data can become cargo-cult rigor."
+      ],
+      "confidence": "possible",
+      "sources": [],
+      "tags": [
+        "support"
+      ]
+    },
+    {
+      "id": "C3",
+      "text": "Residual uncertainty: which single metric or stakeholder criterion should dominate tradeoffs?",
+      "support": [
+        "Multi-objective problems need a declared primary criterion."
+      ],
+      "objections": [
+        "Premature metric fixation can distort the inquiry."
+      ],
+      "confidence": "weak",
+      "sources": [],
+      "tags": [
+        "uncertainty"
+      ]
+    }
+  ],
+  "search_trace": [
+    {
+      "id": "n0_0",
+      "thought": "Frame as dialectic tension: If the brain is a prediction machine, what happens to moral responsibility?",
+      "value": 0.39999999999999997,
+      "parent_id": null,
+      "children": [
+        "n1_n0_0_0",
+        "n1_n0_0_1",
+        "n1_n0_0_2"
+      ],
+      "meta": {
+        "step": 0
+      }
+    },
+    {
+      "id": "n0_1",
+      "thought": "Frame as claim lattice: If the brain is a prediction machine, what happens to moral responsibility?",
+      "value": 0.39999999999999997,
+      "parent_id": null,
+      "children": [
+        "n1_n0_1_0",
+        "n1_n0_1_1",
+        "n1_n0_1_2"
+      ],
+      "meta": {
+        "step": 0
+      }
+    },
+    {
+      "id": "n0_2",
+      "thought": "Frame as client narrative: If the brain is a prediction machine, what happens to moral responsibility?",
+      "value": 0.39999999999999997,
+      "parent_id": null,
+      "children": [
+        "n1_n0_2_0",
+        "n1_n0_2_1",
+        "n1_n0_2_2"
+      ],
+      "meta": {
+        "step": 0
+      }
+    },
+    {
+      "id": "n1_n0_0_0",
+      "thought": "Frame as dialectic tension: If the brain is a prediction machine, what happens to moral responsibility? → add falsifiers and residual unknowns.",
+      "value": 0.55,
+      "parent_id": "n0_0",
+      "children": [
+        "n2_n1_n0_0_0_0",
+        "n2_n1_n0_0_0_1",
+        "n2_n1_n0_0_0_2"
+      ],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_0_1",
+      "thought": "Frame as dialectic tension: If the brain is a prediction machine, what happens to moral responsibility? → prioritize one high-leverage next action.",
+      "value": 0.39999999999999997,
+      "parent_id": "n0_0",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_0_2",
+      "thought": "Frame as dialectic tension: If the brain is a prediction machine, what happens to moral responsibility? → stress-test with a steelman objection.",
+      "value": 0.39999999999999997,
+      "parent_id": "n0_0",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_1_0",
+      "thought": "Frame as claim lattice: If the brain is a prediction machine, what happens to moral responsibility? → add falsifiers and residual unknowns.",
+      "value": 0.55,
+      "parent_id": "n0_1",
+      "children": [
+        "n2_n1_n0_1_0_0",
+        "n2_n1_n0_1_0_1",
+        "n2_n1_n0_1_0_2"
+      ],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_1_1",
+      "thought": "Frame as claim lattice: If the brain is a prediction machine, what happens to moral responsibility? → prioritize one high-leverage next action.",
+      "value": 0.39999999999999997,
+      "parent_id": "n0_1",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_1_2",
+      "thought": "Frame as claim lattice: If the brain is a prediction machine, what happens to moral responsibility? → stress-test with a steelman objection.",
+      "value": 0.39999999999999997,
+      "parent_id": "n0_1",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_2_0",
+      "thought": "Frame as client narrative: If the brain is a prediction machine, what happens to moral responsibility? → add falsifiers and residual unknowns.",
+      "value": 0.55,
+      "parent_id": "n0_2",
+      "children": [
+        "n2_n1_n0_2_0_0",
+        "n2_n1_n0_2_0_1",
+        "n2_n1_n0_2_0_2"
+      ],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_2_1",
+      "thought": "Frame as client narrative: If the brain is a prediction machine, what happens to moral responsibility? → prioritize one high-leverage next action.",
+      "value": 0.39999999999999997,
+      "parent_id": "n0_2",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n1_n0_2_2",
+      "thought": "Frame as client narrative: If the brain is a prediction machine, what happens to moral responsibility? → stress-test with a steelman objection.",
+      "value": 0.39999999999999997,
+      "parent_id": "n0_2",
+      "children": [],
+      "meta": {
+        "step": 1
+      }
+    },
+    {
+      "id": "n2_n1_n0_0_0_0",
+      "thought": "Frame as dialectic tension: If the brain is a prediction machine, what happens to moral responsibility? → add falsifiers and residual unknowns. → add falsifiers and residual unknowns.",
+      "value": 0.55,
+      "parent_id": "n1_n0_0_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_0_0_1",
+      "thought": "Frame as dialectic tension: If the brain is a prediction machine, what happens to moral responsibility? → add falsifiers and residual unknowns. → prioritize one high-leverage next action.",
+      "value": 0.55,
+      "parent_id": "n1_n0_0_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_0_0_2",
+      "thought": "Frame as dialectic tension: If the brain is a prediction machine, what happens to moral responsibility? → add falsifiers and residual unknowns. → stress-test with a steelman objection.",
+      "value": 0.55,
+      "parent_id": "n1_n0_0_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_1_0_0",
+      "thought": "Frame as claim lattice: If the brain is a prediction machine, what happens to moral responsibility? → add falsifiers and residual unknowns. → add falsifiers and residual unknowns.",
+      "value": 0.55,
+      "parent_id": "n1_n0_1_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_1_0_1",
+      "thought": "Frame as claim lattice: If the brain is a prediction machine, what happens to moral responsibility? → add falsifiers and residual unknowns. → prioritize one high-leverage next action.",
+      "value": 0.55,
+      "parent_id": "n1_n0_1_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_1_0_2",
+      "thought": "Frame as claim lattice: If the brain is a prediction machine, what happens to moral responsibility? → add falsifiers and residual unknowns. → stress-test with a steelman objection.",
+      "value": 0.55,
+      "parent_id": "n1_n0_1_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_2_0_0",
+      "thought": "Frame as client narrative: If the brain is a prediction machine, what happens to moral responsibility? → add falsifiers and residual unknowns. → add falsifiers and residual unknowns.",
+      "value": 0.55,
+      "parent_id": "n1_n0_2_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_2_0_1",
+      "thought": "Frame as client narrative: If the brain is a prediction machine, what happens to moral responsibility? → add falsifiers and residual unknowns. → prioritize one high-leverage next action.",
+      "value": 0.55,
+      "parent_id": "n1_n0_2_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    },
+    {
+      "id": "n2_n1_n0_2_0_2",
+      "thought": "Frame as client narrative: If the brain is a prediction machine, what happens to moral responsibility? → add falsifiers and residual unknowns. → stress-test with a steelman objection.",
+      "value": 0.55,
+      "parent_id": "n1_n0_2_0",
+      "children": [],
+      "meta": {
+        "step": 2
+      }
+    }
+  ],
+  "reflections": [
+    {
+      "trial": 1,
+      "failure_summary": "verdict=accept_with_minor_revisions; missing=[]",
+      "lesson": "Increase structure, epistemic humility, and domain-specific acceptance checks.",
+      "next_action": "Re-run L3 with broader framings and force L4 limit/action sections."
+    },
+    {
+      "trial": 2,
+      "failure_summary": "verdict=accept_with_minor_revisions; missing=[]",
+      "lesson": "Increase structure, epistemic humility, and domain-specific acceptance checks.",
+      "next_action": "Re-run L3 with broader framings and force L4 limit/action sections."
+    }
+  ],
+  "skills_used": [],
+  "artifacts": [
+    {
+      "name": "executive_summary",
+      "content": "# Executive summary — Predictive processing and moral responsibility\n\n**Question:** If the brain is a prediction machine, what happens to moral responsibility?\n\n**Framing:** Frame as dialectic tension: If the brain is a prediction machine, what happens to moral responsibility? → add falsifiers and residual unknowns.\n\n**Score:** 0.66 · **Review:** accept_with_minor_revisions\n\n**Instruction:** For the question «If the brain is a prediction machine, what happens to moral responsibility?»: Run a steelman-then-critique: strongest opposing view first, then precise fracture points.\n\n\n### Limits & unknowns\n- What would falsify the main claim?\n- Which assumptions are load-bearing?\n- Audience-specific risk for philosophy seminar + curious technologists.\n\n### Next actions\n1. One measurement or artifact to produce this week.\n2. One conversation or review to schedule.\n3. One scope cut if time is short.",
+      "kind": "markdown",
+      "path_hint": "outputs/executive_summary.md"
+    },
+    {
+      "name": "research_memo",
+      "content": "# Predictive processing and moral responsibility\n\n## Core question\nIf the brain is a prediction machine, what happens to moral responsibility?\n\n## Instruction in force\nFor the question «If the brain is a prediction machine, what happens to moral responsibility?»: Run a steelman-then-critique: strongest opposing view first, then precise fracture points.\n\n## Audience\nphilosophy seminar + curious technologists\n\n## Outline\n1. Hook / stakes\n2. Core question\n3. Claim lattice\n4. Objections & steelman\n5. Working synthesis\n6. Limits\n7. Next actions\n\n## Claim lattice\n\n### C1: Core thesis addressing: If the brain is a prediction machine, what happens to moral responsibility?\n\nSupports:\n- Aligned with instruction: For the question «If the brain is a prediction machine, what happens to moral responsibility?»: Run a steelman-then-crit...\n- Keywords in play: predictive processing, responsibility, agency, blame\n\nObjections:\n- The framing may smuggle unstated assumptions about the audience.\n- Evidence quality is not yet measured; confidence should stay provisional.\n\n### C2: Working support: a structured approach to «Predictive processing and moral responsibility» improves decision quality under uncertainty.\n\nSupports:\n- Decomposition reduces hidden tradeoffs.\n- Explicit objections prevent one-sided writing.\n\nObjections:\n- Structure without domain data can become cargo-cult rigor.\n\n### C3: Residual uncertainty: which single metric or stakeholder criterion should dominate tradeoffs?\n\nSupports:\n- Multi-objective problems need a declared primary criterion.\n\nObjections:\n- Premature metric fixation can distort the inquiry.\n\n\n## Deliberate framing (L3)\nFrame as dialectic tension: If the brain is a prediction machine, what happens to moral responsibility? → add falsifiers and residual unknowns.\n\n## Trial memory (L5)\nNo prior trial lessons.\n\n## Dialectic\n**Thesis:** Core thesis addressing: If the brain is a prediction machine, what happens to moral responsibility?\n\n**Antithesis:** Counter: the best path on «Predictive processing and moral responsibility» may be local craft and tacit skill, not explicit lattices—over-formalization can freeze inquiry.\n\n**Steelman:** Steelman of the counter: experts often succeed with pattern recognition under time pressure; forcing explicit structure can slow delivery and invent false precision.\n\n**Synthesis:** Use a *light* claim lattice as a scaffold, not a cage: make assumptions and objections legible, then ship the smallest artifact that can be falsified in the world.\n\n\n### Limits & unknowns\n- What would falsify the main claim?\n- Which assumptions are load-bearing?\n- Audience-specific risk for philosophy seminar + curious technologists.\n\n### Next actions\n1. One measurement or artifact to produce this week.\n2. One conversation or review to schedule.\n3. One scope cut if time is short.\n\n### Limits & unknowns\n- What would falsify the main claim?\n- Which assumptions are load-bearing?\n- Audience-specific risk for philosophy seminar + curious technologists.\n\n### Next actions\n1. One measurement or artifact to produce this week.\n2. One conversation or review to schedule.\n3. One scope cut if time is short.\n\n### Limits & unknowns\n- What would falsify the main claim?\n- Which assumptions are load-bearing?\n- Audience-specific risk for philosophy seminar + curious technologists.\n\n### Next actions\n1. One measurement or artifact to produce this week.\n2. One conversation or review to schedule.\n3. One scope cut if time is short.",
+      "kind": "markdown",
+      "path_hint": "outputs/research_memo.md"
+    },
+    {
+      "name": "instruction_used",
+      "content": "For the question «If the brain is a prediction machine, what happens to moral responsibility?»: Run a steelman-then-critique: strongest opposing view first, then precise fracture points.",
+      "kind": "markdown",
+      "path_hint": "outputs/instruction.md"
+    }
+  ],
+  "peer_review": {
+    "scores": {
+      "clarity": 0.7,
+      "structure": 0.8,
+      "soundness": 0.83,
+      "actionability": 0.75,
+      "humility": 0.8
+    },
+    "overall": 0.776,
+    "revision_needed": [],
+    "verdict": "accept_with_minor_revisions"
+  },
+  "trial_log": [
+    {
+      "trial": 1,
+      "score": 0.6599999999999999,
+      "review": "accept_with_minor_revisions",
+      "instruction_preview": "For the question «If the brain is a prediction machine, what happens to moral responsibility?»: Run a steelman-then-critique: strongest opposing view first, the",
+      "l1_mode": "cascade",
+      "l3_mode": "tot",
+      "n_candidates": 4
+    }
+  ],
+  "final_score": 0.6599999999999999
+}

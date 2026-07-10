@@ -1,0 +1,46 @@
+{
+  "title": "2-week climate-tech research sprint",
+  "domain": "freelance",
+  "score": 0.71,
+  "review": {
+    "scores": {
+      "clarity": 0.7,
+      "structure": 0.8,
+      "soundness": 0.855,
+      "actionability": 0.75,
+      "humility": 0.8
+    },
+    "overall": 0.781,
+    "revision_needed": [],
+    "verdict": "accept_with_minor_revisions"
+  },
+  "files": [
+    "outputs/executive_summary.md",
+    "outputs/research_memo.md",
+    "outputs/instruction.md",
+    "outputs/client_brief.json"
+  ],
+  "route": {
+    "families": [
+      "In-Context Learning",
+      "Agents",
+      "Self-Criticism",
+      "Answer Engineering"
+    ],
+    "activate": {
+      "ape": true,
+      "opro": false,
+      "meta": true,
+      "tot": true,
+      "lats": true,
+      "refine": true,
+      "reflexion": true,
+      "voyager": true,
+      "stages": true
+    },
+    "rationale": "code/Kaggle \u2192 agent loops + skill memory + ToT\u2192LATS cascade; client deliverables \u2192 structured extraction + polish; skill library enabled for procedural reuse",
+    "l1_mode": "ape",
+    "l3_mode": "cascade"
+  },
+  "instruction": "For the question \u00abHow do I scope a 2-week research sprint for a climate-tech founder who needs dec\u00bb: Client brief mode: goal, constraints, deliverables, timeline, risks, acceptance criteria, open questions."
+}

@@ -1,0 +1,1 @@
+For the question «How do I scope a 2-week research sprint for a climate-tech founder who needs dec»: Client brief mode: goal, constraints, deliverables, timeline, risks, acceptance criteria, open questions.

@@ -19,6 +19,9 @@ keywords = [
   "freelance",
   "llm-agents",
   "arsenal",
+  "toulmin",
+  "argumentation",
+  "claim-lattice",
 ]
 classifiers = [
   "Development Status :: 4 - Beta",

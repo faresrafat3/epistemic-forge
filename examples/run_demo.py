@@ -41,6 +41,8 @@ def main() -> None:
             f"{d['domain']:12} score={result.final_score:.3f} "
             f"review={result.peer_review['verdict']} → {out}"
         )
+    print("\nFor full committed worked examples see examples/worked/")
+    print("For benchmark numbers: python scripts/run_benchmark.py --out docs/benchmark")
 
 
 if __name__ == "__main__":
