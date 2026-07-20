@@ -1,25 +1,16 @@
-## Description
-<!-- Please include a summary of the change and which issue is fixed. Include relevant motivation and context. -->
+## Objective
+<!-- What are you changing? Improving the Toulmin parsing? Adding a new evaluation edge case? Fixing a CLI bug? -->
 
-Fixes # (issue)
+## Impact on Claim Lattices
+- [ ] Modifies how Claims/Warrants/Rebuttals are extracted.
+- [ ] Improves the local-first execution speed or memory footprint.
+- [ ] Fixes a bug in the CLI or output formatting.
 
-## Type of change
-<!-- Please delete options that are not relevant. -->
-- [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
-- [ ] ✨ New feature (non-breaking change which adds functionality)
-- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] 📝 Documentation update
-- [ ] 🚀 Performance/Cost Optimization (e.g., token reduction)
+## Evaluation & Benchmark Checklist
+- [ ] I ran the local tests and everything passes.
+- [ ] My changes DO NOT degrade the +199% benchmark score. (If it improves it, please attach the new score!).
+- [ ] I ensured the system still operates without requiring a paid API key (maintaining the local-first ethos).
 
-## Architecture Impact
-<!-- For AI/Agent repos: Does this change the prompt flow, the decision tree, or the orchestration logic? -->
-- [ ] Yes
-- [ ] No
-
-## Checklist:
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas (like prompt engineering logic)
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings/errors in the CI pipeline
-- [ ] I have added tests that prove my fix is effective or that my feature works
+## Quality Assurance
+- [ ] The output is still strictly structured (no confident mush).
+- [ ] Edge cases (e.g., philosophical dilemmas, Kaggle leakage queries) are handled gracefully.
