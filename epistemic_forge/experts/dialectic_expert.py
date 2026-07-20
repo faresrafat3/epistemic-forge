@@ -1,32 +1,27 @@
-"""Dialectic expert — philosophy/research tension mapping."""
-
-from __future__ import annotations
-
-from typing import Any, Dict
-
-from epistemic_forge.models import ProjectSpec
-
+"""L2 Epistemic Synthesis Engine: Hegelian Dialectic."""
+from epistemic_forge.models import ProjectSpec, HegelianDialecticOutput
+from epistemic_forge.llm import generate_structured
+from typing import Dict, Any
 
 def run_dialectic(spec: ProjectSpec, claims_bundle: Dict[str, Any]) -> Dict[str, Any]:
-    claims = claims_bundle.get("claims", [])
-    thesis = claims[0]["text"] if claims else spec.question
+    """Execute Hegelian Synthesis to destroy weak assumptions."""
+    thesis = spec.question
+    
+    messages = [
+        {"role": "system", "content": "You are a ruthless Hegelian philosopher and logician. Your goal is to take a premise, construct the most devastating 'Steelman' antithesis possible, and forge a synthesis that represents the nuanced truth."},
+        {"role": "user", "content": f"Core Premise/Thesis: {thesis}\nProject Domain: {spec.domain.value}\nDestroy this premise with logic, then synthesize."}
+    ]
+    
+    # Neuro-Symbolic Call: Forcing GPT to return the strict Hegelian schema
+    result: HegelianDialecticOutput = generate_structured(
+        messages=messages,
+        response_model=HegelianDialecticOutput,
+        model="gpt-4o-mini" # Cost-aware baseline
+    )
+    
     return {
         "thesis": thesis,
-        "antithesis": (
-            f"Counter: the best path on «{spec.title}» may be local craft and tacit skill, "
-            "not explicit lattices—over-formalization can freeze inquiry."
-        ),
-        "steelman": (
-            "Steelman of the counter: experts often succeed with pattern recognition under time "
-            "pressure; forcing explicit structure can slow delivery and invent false precision."
-        ),
-        "synthesis": (
-            "Use a *light* claim lattice as a scaffold, not a cage: make assumptions and "
-            "objections legible, then ship the smallest artifact that can be falsified in the world."
-        ),
-        "open_questions": [
-            "What is the cheapest falsifying observation?",
-            "Who is harmed if we are wrong?",
-            "What would count as enough certainty to act?",
-        ],
+        "antithesis": result.steelmanned_antithesis,
+        "synthesis": result.synthesis_resolution,
+        "open_questions": result.remaining_uncertainties,
     }

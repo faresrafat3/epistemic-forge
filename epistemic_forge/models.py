@@ -143,3 +143,27 @@ class WritingExpertOutput(BaseModel):
     tone_consistency_score: float
     structural_flow: str
     draft_paragraphs: List[str]
+
+
+# ==========================================
+# L2 SYNTHESIS ENGINE SCHEMAS (NEURO-SYMBOLIC)
+# ==========================================
+from pydantic import BaseModel, Field
+from typing import List
+
+class RigorSentinelOutput(BaseModel):
+    """Strict schema for the Leakage & Rigor Sentinel (formerly Kaggle Expert)."""
+    epistemic_blind_spots: List[str] = Field(description="Hidden assumptions or target leakage risks in the user's premise.")
+    falsification_metric: str = Field(description="The exact mathematical or logical metric that would prove this premise wrong.")
+    robust_baseline: str = Field(description="A highly resilient, low-complexity baseline approach.")
+
+class HegelianDialecticOutput(BaseModel):
+    """Strict schema for the Hegelian Synthesis Engine."""
+    steelmanned_antithesis: str = Field(description="The absolute strongest possible argument against the core thesis.")
+    synthesis_resolution: str = Field(description="The nuanced truth that reconciles the thesis and the antithesis.")
+    remaining_uncertainties: List[str] = Field(description="Questions that still lack sufficient evidence.")
+
+class ChainOfDensityOutput(BaseModel):
+    """Strict schema for the Chain of Density Architect."""
+    information_density_score: float = Field(ge=0.0, le=10.0, description="Score of how dense the signal-to-noise ratio is.")
+    crystallized_claim: str = Field(description="The final, hyper-dense output stripped of all filler words.")

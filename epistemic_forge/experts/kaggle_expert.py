@@ -1,82 +1,29 @@
-"""Kaggle / applied ML expert."""
+"""L2 Epistemic Synthesis Engine: Leakage & Rigor Sentinel."""
+from epistemic_forge.models import ProjectSpec, RigorSentinelOutput
+from epistemic_forge.llm import generate_structured
+from typing import Dict, Any
 
-from __future__ import annotations
-
-from typing import Any, Dict, List
-
-from epistemic_forge.models import ProjectSpec
-
-
-def build_competition_kit(
-    spec: ProjectSpec, claims_bundle: Dict[str, Any], skills: List[str]
-) -> Dict[str, Any]:
-    notebook_md = f"""# {spec.title} — Kaggle Spine
-
-## Problem
-{spec.question}
-
-## Skills retrieved
-{', '.join(skills) or 'none'}
-
-## Plan
-1. **Define target & metric** — match leaderboard metric exactly.
-2. **Leakage audit** — time, group, target leakage checks.
-3. **EDA** — missingness, cardinality, target balance, simple slices.
-4. **Baseline** — linear/GBDT simple pipeline; record CV mean±std.
-5. **Error analysis** — where does baseline fail?
-6. **One improvement** — single ablated idea; measure lift.
-7. **Ship** — reproducible seeds, requirements, README.
-
-## Skeleton code
-```python
-import numpy as np
-import pandas as pd
-from sklearn.model_selection import StratifiedKFold, cross_val_score
-from sklearn.pipeline import Pipeline
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.impute import SimpleImputer
-from sklearn.ensemble import HistGradientBoostingClassifier
-
-# df = pd.read_csv('train.csv')
-# y = df['target']
-# X = df.drop(columns=['target'])
-
-# num_cols = X.select_dtypes(include='number').columns
-# cat_cols = X.select_dtypes(exclude='number').columns
-# pre = ColumnTransformer([
-#     ('num', SimpleImputer(strategy='median'), num_cols),
-#     ('cat', Pipeline([
-#         ('imp', SimpleImputer(strategy='most_frequent')),
-#         ('oh', OneHotEncoder(handle_unknown='ignore')),
-#     ]), cat_cols),
-# ])
-# clf = Pipeline([('pre', pre), ('model', HistGradientBoostingClassifier(random_state=42))])
-# cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-# scores = cross_val_score(clf, X, y, cv=cv, scoring='roc_auc')
-# print(scores.mean(), scores.std())
-```
-
-## Honest claims checklist
-- [ ] Metric matches competition
-- [ ] Split policy documented
-- [ ] No target leakage features
-- [ ] Baseline before complexity
-"""
+def build_competition_kit(spec: ProjectSpec, claims_bundle: Dict[str, Any], skills: list) -> Dict[str, Any]:
+    """Audit the premise for epistemic blind spots and target leakage."""
+    
+    messages = [
+        {"role": "system", "content": "You are a Grandmaster ML Auditor. Your job is to look at a proposed research or data problem and identify 'target leakage'—where the answer is implicitly baked into the question—and propose strict falsification metrics."},
+        {"role": "user", "content": f"Problem Statement: {spec.question}\nKeywords: {spec.keywords}\nFind the blind spots and establish a robust baseline."}
+    ]
+    
+    # Neuro-Symbolic Call
+    result: RigorSentinelOutput = generate_structured(
+        messages=messages,
+        response_model=RigorSentinelOutput,
+        model="gpt-4o-mini"
+    )
+    
     return {
-        "checklist": [
-            "metric alignment",
-            "leakage audit",
-            "baseline CV",
-            "error analysis",
-            "single ablation",
-        ],
-        "notebook_markdown": notebook_md,
+        "checklist": result.epistemic_blind_spots,
+        "metric_alignment": result.falsification_metric,
+        "baseline_architecture": result.robust_baseline,
         "experiment_log_template": {
-            "run_id": "baseline_001",
-            "model": "HGB",
-            "cv_mean": None,
-            "cv_std": None,
-            "notes": "",
-        },
+            "status": "Audited by Rigor Sentinel",
+            "notes": "Ensure no data from the future is used."
+        }
     }

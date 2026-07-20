@@ -1,48 +1,28 @@
-"""Writing expert — outlines and drafts."""
+"""L2 Epistemic Synthesis Engine: Chain of Density Architect."""
+from epistemic_forge.models import ProjectSpec, ChainOfDensityOutput
+from epistemic_forge.llm import generate_structured
+from typing import Dict, Any
 
-from __future__ import annotations
-
-from typing import Any, Dict, List
-
-from epistemic_forge.models import ProjectSpec
-
-
-def outline_and_draft(
-    spec: ProjectSpec, claims_bundle: Dict[str, Any], instruction: str
-) -> Dict[str, Any]:
-    claims: List[Dict[str, Any]] = claims_bundle.get("claims", [])
-    outline = [
-        "Hook / stakes",
-        "Core question",
-        "Claim lattice",
-        "Objections & steelman",
-        "Working synthesis",
-        "Limits",
-        "Next actions",
+def outline_and_draft(spec: ProjectSpec, claims_bundle: Dict[str, Any], instruction: str) -> Dict[str, Any]:
+    """Compress the dialectic into a hyper-dense, falsifiable artifact."""
+    
+    # Gather previous context to compress
+    raw_context = f"Question: {spec.question}\nClaims: {claims_bundle.get('claims', [])}"
+    
+    messages = [
+        {"role": "system", "content": "You are a Chain-of-Density Architect. Your goal is to take raw thoughts and compress them into a highly dense, signal-rich artifact stripped of all rhetorical fluff and confident mush. Every word must carry epistemic weight."},
+        {"role": "user", "content": f"Raw Context:\n{raw_context}\nCompress this."}
     ]
-    body_bits = []
-    for c in claims:
-        body_bits.append(f"### {c['id']}: {c['text']}\n")
-        if c.get("support"):
-            body_bits.append("Supports:\n" + "\n".join(f"- {s}" for s in c["support"]))
-        if c.get("objections"):
-            body_bits.append(
-                "\nObjections:\n" + "\n".join(f"- {o}" for o in c["objections"])
-            )
-        body_bits.append("")
-
-    draft = f"""# {spec.title}
-
-## Core question
-{spec.question}
-
-## Instruction in force
-{instruction}
-
-## Audience
-{spec.audience}
-
-## Outline
-""" + "\n".join(f"{i+1}. {x}" for i, x in enumerate(outline)) + "\n\n## Claim lattice\n\n" + "\n".join(body_bits)
-
-    return {"outline": outline, "draft_markdown": draft}
+    
+    # Neuro-Symbolic Call
+    result: ChainOfDensityOutput = generate_structured(
+        messages=messages,
+        response_model=ChainOfDensityOutput,
+        model="gpt-4o-mini"
+    )
+    
+    return {
+        "density_score": result.information_density_score,
+        "draft_markdown": f"# Crystallized Artifact\n\n{result.crystallized_claim}\n\n*Density Score: {result.information_density_score}/10*",
+        "outline": ["Crystallized Core"]
+    }
