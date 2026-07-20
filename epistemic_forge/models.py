@@ -178,3 +178,9 @@ class ClaimLatticeOutput(BaseModel):
     """A strict output schema containing multiple grounded claims."""
     claims: List[Claim]
     lattice_summary: str = Field(description="A short summary of how these claims interlock.")
+
+class OptimizedInstruction(BaseModel):
+    """Strict schema for the L1 Instruction Optimizer (OPRO)."""
+    meta_prompt: str = Field(description="The optimized, hyper-specific instruction for the task.")
+    rationale: str = Field(description="Why this instruction will yield better results than a generic prompt.")
+    expected_failure_modes: List[str] = Field(description="What the LLM might get wrong if not guided properly.")

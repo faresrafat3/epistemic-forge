@@ -1,7 +1,7 @@
+from __future__ import annotations
 from loguru import logger
 """Full ARSENAL-inspired pipeline orchestration for Epistemic Forge."""
 
-from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
