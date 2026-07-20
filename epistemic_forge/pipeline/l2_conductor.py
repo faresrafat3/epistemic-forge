@@ -7,6 +7,7 @@ from typing import Any, Dict, List
 
 from epistemic_forge.experts import (
     claim_expert,
+    semitic_expert,
     dialectic_expert,
     freelance_expert,
     kaggle_expert,
