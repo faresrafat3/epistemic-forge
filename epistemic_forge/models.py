@@ -36,6 +36,11 @@ class ProjectSpec(BaseModel):
     max_trials: int = 3
     enable_opro_style: bool = True
     enable_skills: bool = True
+    
+    # Hermes Universal Routing Overrides
+    target_model: str = "gpt-4o-mini"
+    api_base: str = None
+    api_key: str = None
 
 
 
