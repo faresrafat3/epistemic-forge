@@ -162,6 +162,8 @@ class HegelianDialecticOutput(BaseModel):
     steelmanned_antithesis: str = Field(description="The absolute strongest possible argument against the core thesis.")
     synthesis_resolution: str = Field(description="The nuanced truth that reconciles the thesis and the antithesis.")
     remaining_uncertainties: List[str] = Field(description="Questions that still lack sufficient evidence.")
+    epistemic_confidence: float = Field(ge=0.0, le=1.0, description="Confidence in the synthesis based on available evidence.")
+    source_warrant: str = Field(description="The exact logical warrant or grounded theory that justifies this synthesis.")
 
 class ChainOfDensityOutput(BaseModel):
     """Strict schema for the Chain of Density Architect."""
