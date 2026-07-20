@@ -1,3 +1,4 @@
+from loguru import logger
 """Full ARSENAL-inspired pipeline orchestration for Epistemic Forge."""
 
 from __future__ import annotations
@@ -172,4 +173,11 @@ def run_pipeline(
         constraints=constraints or [],
         max_trials=max_trials,
     )
-    return ArsenalRun.create().run(spec)
+    try:
+        logger.info(f"Starting Epistemic Forge Pipeline for: '{title}'")
+        result = ArsenalRun.create().run(spec)
+        logger.success("Pipeline execution completed successfully.")
+        return result
+    except Exception as e:
+        logger.exception(f"Critical Pipeline Failure: {str(e)}")
+        raise SystemExit(1)
