@@ -184,3 +184,16 @@ class OptimizedInstruction(BaseModel):
     meta_prompt: str = Field(description="The optimized, hyper-specific instruction for the task.")
     rationale: str = Field(description="Why this instruction will yield better results than a generic prompt.")
     expected_failure_modes: List[str] = Field(description="What the LLM might get wrong if not guided properly.")
+
+class ThoughtProposal(BaseModel):
+    """A single reasoning path proposed during Tree Search."""
+    thought_text: str = Field(description="The proposed logical step or framing.")
+
+class ThoughtProposalsOutput(BaseModel):
+    """Collection of proposed thoughts for branching."""
+    proposals: List[ThoughtProposal]
+
+class ThoughtEvaluation(BaseModel):
+    """LLM-as-a-Judge evaluation of a specific thought branch."""
+    epistemic_score: float = Field(ge=0.0, le=1.0, description="How epistemically sound and logically rigorous this thought is.")
+    critique: str = Field(description="Why this thought deserves this score.")
