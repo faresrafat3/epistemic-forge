@@ -118,3 +118,28 @@ class ForgeResult(BaseModel):
     trial_log: List[Dict[str, Any]] = Field(default_factory=list)
     final_score: float = 0.0
 
+
+# ==========================================
+# NEURO-SYMBOLIC EXPERT SCHEMAS (L2)
+# Enforcing deterministic outputs from LLMs
+# ==========================================
+
+class KaggleExpertOutput(BaseModel):
+    """Strict schema for the Kaggle Expert to prevent hallucinations."""
+    leakage_risk_score: float = Field(ge=0.0, le=1.0, description="Risk of data leakage in the proposed approach.")
+    validation_strategy: str = Field(description="Strict CV strategy (e.g., StratifiedKFold).")
+    baseline_architecture: str = Field(description="Simple, robust baseline model recommendation.")
+    critical_flaws: List[str] = Field(description="Potential pitfalls in the feature engineering.")
+
+class DialecticExpertOutput(BaseModel):
+    """Strict schema for Philosophical/Dialectic reasoning."""
+    core_thesis: str
+    antithesis: str
+    synthesis: str
+    logical_fallacies_avoided: List[str]
+
+class WritingExpertOutput(BaseModel):
+    """Strict schema for the Writing Expert."""
+    tone_consistency_score: float
+    structural_flow: str
+    draft_paragraphs: List[str]

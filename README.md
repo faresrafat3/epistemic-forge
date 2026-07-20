@@ -8,6 +8,9 @@
 [![Benchmark](https://img.shields.io/badge/Toulmin%20Coverage-+231%25%20vs%20baseline-orange.svg?style=for-the-badge)](docs/benchmark/BENCHMARK.md)
 
 **Stop shipping confident mush.**  
+**Epistemic Forge is a Neuro-Symbolic State Machine for LLMs.**
+Instead of chatty, unpredictable multi-agent systems that burn tokens, we use a deterministic L0–L6 pipeline. We enforce strict Toulmin-based Pydantic schemas at every node, allowing you to extract GPT-4 level deep tree-search and expert dialectics from any model with **100% predictable output shapes.**
+
 Turn messy research, philosophy, freelance, and Kaggle questions into **claim lattices** — structured arguments with evidence slots, objections, confidence, and next actions.
 
 </div>
