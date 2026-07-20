@@ -29,7 +29,10 @@ def extract_claims(spec: ProjectSpec, instruction: str) -> Dict[str, Any]:
     support_c = Claim(
         id="C2",
         text=f"Working support: a structured approach to «{title}» improves decision quality under uncertainty.",
-        support=["Decomposition reduces hidden tradeoffs.", "Explicit objections prevent one-sided writing."],
+        support=[
+            "Decomposition reduces hidden tradeoffs.",
+            "Explicit objections prevent one-sided writing.",
+        ],
         objections=["Structure without domain data can become cargo-cult rigor."],
         confidence=Confidence.POSSIBLE,
         tags=["support"],

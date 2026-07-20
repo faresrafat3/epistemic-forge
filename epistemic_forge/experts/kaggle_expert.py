@@ -1,29 +1,41 @@
-"""L2 Epistemic Synthesis Engine: Leakage & Rigor Sentinel."""
+"""Data Leakage and Scientific Rigor Expert Implementation."""
+
+from typing import Dict, Any
+from pydantic import BaseModel
+
+from epistemic_forge.experts.base import EpistemicExpert
 from epistemic_forge.models import ProjectSpec, RigorSentinelOutput
 from epistemic_forge.llm import generate_structured
-from typing import Dict, Any
 
-def build_competition_kit(spec: ProjectSpec, claims_bundle: Dict[str, Any], skills: list) -> Dict[str, Any]:
-    """Audit the premise for epistemic blind spots and target leakage."""
-    
-    messages = [
-        {"role": "system", "content": "You are a Grandmaster ML Auditor. Your job is to look at a proposed research or data problem and identify 'target leakage'—where the answer is implicitly baked into the question—and propose strict falsification metrics."},
-        {"role": "user", "content": f"Problem Statement: {spec.question}\nKeywords: {spec.keywords}\nFind the blind spots and establish a robust baseline."}
-    ]
-    
-    # Neuro-Symbolic Call
-    result: RigorSentinelOutput = generate_structured(
-        messages=messages,
-        response_model=RigorSentinelOutput,
-        model="gpt-4o-mini"
-    )
-    
-    return {
-        "checklist": result.epistemic_blind_spots,
-        "metric_alignment": result.falsification_metric,
-        "baseline_architecture": result.robust_baseline,
-        "experiment_log_template": {
-            "status": "Audited by Rigor Sentinel",
-            "notes": "Ensure no data from the future is used."
-        }
-    }
+
+class RigorSentinelExpert(EpistemicExpert):
+    """Audits data science/research premises for methodological flaws and leakage."""
+
+    @property
+    def expert_name(self) -> str:
+        return "Rigor_And_Leakage_Sentinel"
+
+    def analyze(
+        self, spec: ProjectSpec, context: Dict[str, Any]
+    ) -> RigorSentinelOutput:
+        """Identifies target leakage and establishes strict falsification metrics."""
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are a Grandmaster ML Auditor. Identify 'target leakage' "
+                    "or hidden assumptions in the premise, and propose strict falsification metrics."
+                ),
+            },
+            {
+                "role": "user",
+                "content": f"Problem Statement: {spec.question}\nKeywords: {spec.keywords}\nFind blind spots.",
+            },
+        ]
+
+        return generate_structured(
+            messages=messages,
+            response_model=RigorSentinelOutput,
+            model=spec.target_model,
+            api_base=spec.api_base,
+        )

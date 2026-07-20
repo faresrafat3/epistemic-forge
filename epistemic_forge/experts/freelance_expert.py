@@ -7,7 +7,9 @@ from typing import Any, Dict
 from epistemic_forge.models import ProjectSpec
 
 
-def build_client_pack(spec: ProjectSpec, claims_bundle: Dict[str, Any]) -> Dict[str, Any]:
+def build_client_pack(
+    spec: ProjectSpec, claims_bundle: Dict[str, Any]
+) -> Dict[str, Any]:
     return {
         "client_brief": {
             "goal": spec.question,

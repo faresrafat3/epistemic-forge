@@ -1,27 +1,43 @@
-"""L2 Epistemic Synthesis Engine: Hegelian Dialectic."""
+"""Hegelian Synthesis Expert Implementation."""
+
+from typing import Dict, Any
+from pydantic import BaseModel
+
+from epistemic_forge.experts.base import EpistemicExpert
 from epistemic_forge.models import ProjectSpec, HegelianDialecticOutput
 from epistemic_forge.llm import generate_structured
-from typing import Dict, Any
 
-def run_dialectic(spec: ProjectSpec, claims_bundle: Dict[str, Any]) -> Dict[str, Any]:
-    """Execute Hegelian Synthesis to destroy weak assumptions."""
-    thesis = spec.question
-    
-    messages = [
-        {"role": "system", "content": "You are a ruthless Hegelian philosopher and logician. Your goal is to take a premise, construct the most devastating 'Steelman' antithesis possible, and forge a synthesis that represents the nuanced truth."},
-        {"role": "user", "content": f"Core Premise/Thesis: {thesis}\nProject Domain: {spec.domain.value}\nDestroy this premise with logic, then synthesize."}
-    ]
-    
-    # Neuro-Symbolic Call: Forcing GPT to return the strict Hegelian schema
-    result: HegelianDialecticOutput = generate_structured(
-        messages=messages,
-        response_model=HegelianDialecticOutput,
-        model="gpt-4o-mini" # Cost-aware baseline
-    )
-    
-    return {
-        "thesis": thesis,
-        "antithesis": result.steelmanned_antithesis,
-        "synthesis": result.synthesis_resolution,
-        "open_questions": result.remaining_uncertainties,
-    }
+
+class HegelianExpert(EpistemicExpert):
+    """Applies Hegelian dialectic (Thesis -> Antithesis -> Synthesis) to premises."""
+
+    @property
+    def expert_name(self) -> str:
+        return "Hegelian_Dialectic_Engine"
+
+    def analyze(
+        self, spec: ProjectSpec, context: Dict[str, Any]
+    ) -> HegelianDialecticOutput:
+        """Synthesizes the core question by forcing a steelmanned antithesis."""
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are a ruthless Hegelian philosopher. Take the user's premise, "
+                    "construct the most devastating 'Steelman' antithesis possible, "
+                    "and forge a synthesis that represents the nuanced truth."
+                ),
+            },
+            {
+                "role": "user",
+                "content": f"Core Thesis: {spec.question}\nDomain: {spec.domain}\nDestroy and synthesize.",
+            },
+        ]
+
+        # The universal Hermes router handles the LLM complexity internally
+        return generate_structured(
+            messages=messages,
+            response_model=HegelianDialecticOutput,
+            model=spec.target_model,
+            api_base=spec.api_base,
+        )
