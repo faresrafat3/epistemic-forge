@@ -45,15 +45,14 @@ class ProjectSpec(BaseModel):
 
 
 class Claim(BaseModel):
-    """Atomic epistemic unit."""
-
-    id: str
-    text: str
-    support: List[str] = Field(default_factory=list)
-    objections: List[str] = Field(default_factory=list)
-    confidence: Confidence = Confidence.LIKELY
-    sources: List[str] = Field(default_factory=list)
-    tags: List[str] = Field(default_factory=list)
+    """Atomic epistemic unit with absolute grounding."""
+    id: str = Field(description="Unique identifier, e.g., C1")
+    text: str = Field(description="The core claim or premise.")
+    epistemic_warrant: str = Field(description="MANDATORY: The exact logical deduction, explanation, or evidence that proves this claim. NO UNSUBSTANTIATED CLAIMS.")
+    potential_falsifier: str = Field(description="What specific evidence or scenario would prove this claim wrong?")
+    support: List[str] = Field(default_factory=list, description="Sub-arguments supporting this claim.")
+    objections: List[str] = Field(default_factory=list, description="Valid counter-arguments against this claim.")
+    confidence: Confidence = Field(default=Confidence.LIKELY)
 
 
 
@@ -174,3 +173,8 @@ class ChainOfDensityOutput(BaseModel):
     """Strict schema for the Chain of Density Architect."""
     information_density_score: float = Field(ge=0.0, le=10.0, description="Score of how dense the signal-to-noise ratio is.")
     crystallized_claim: str = Field(description="The final, hyper-dense output stripped of all filler words.")
+
+class ClaimLatticeOutput(BaseModel):
+    """A strict output schema containing multiple grounded claims."""
+    claims: List[Claim]
+    lattice_summary: str = Field(description="A short summary of how these claims interlock.")

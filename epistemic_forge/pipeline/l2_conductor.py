@@ -9,6 +9,7 @@ from loguru import logger
 
 from epistemic_forge.models import ProjectSpec
 from epistemic_forge.experts.base import EpistemicExpert
+from epistemic_forge.experts.claim_expert import ClaimLatticeExpert
 from epistemic_forge.experts.dialectic_expert import HegelianExpert
 from epistemic_forge.experts.kaggle_expert import RigorSentinelExpert
 
@@ -22,7 +23,7 @@ class SemanticConductor:
 
     def _route_experts(self, domain: str) -> list[EpistemicExpert]:
         """Determines which experts are required based on the domain."""
-        active_experts = []
+        active_experts = [ClaimLatticeExpert()]
         if domain in ["philosophy", "research", "hybrid"]:
             active_experts.append(HegelianExpert())
         if domain in ["kaggle", "research", "hybrid"]:
