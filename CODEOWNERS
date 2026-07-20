@@ -1,0 +1,10 @@
+# Code Owners Configuration
+# This file enforces that specific reviewers are requested automatically
+# when a PR modifies certain files or directories.
+
+# Global owner for the entire repo
+*       @faresrafat3
+
+# Specialized tracking (Optional: Can be expanded later)
+# e.g., /docs/   @faresrafat3
+# e.g., /tests/  @faresrafat3
