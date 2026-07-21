@@ -224,3 +224,14 @@ class FinalPeerReview(BaseModel):
     revision_needed: List[str] = Field(description="Areas that still need work if any.")
     verdict: str = Field(description="Must be one of: 'accept', 'accept_with_minor_revisions', 'major_revisions', 'reject'")
     final_comments: str = Field(description="A formal peer-review summary.")
+
+class DynamicExpertSchema(BaseModel):
+    """Schema for ADAS (Automated Design of Agentic Systems).
+    The LLM designs a new Pydantic schema structure for a novel expert.
+    """
+    expert_class_name: str = Field(description="Name of the expert, e.g., 'QuantumMechanicsExpert'")
+    expert_description: str = Field(description="What this expert analyzes.")
+    fields_to_extract: List[Dict[str, str]] = Field(
+        description="List of fields the expert must extract. Format: {'field_name': 'description'}"
+    )
+    system_prompt: str = Field(description="The ruthless, highly specific prompt guiding this new expert.")

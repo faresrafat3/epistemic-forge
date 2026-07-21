@@ -12,6 +12,7 @@ from epistemic_forge.experts.base import EpistemicExpert
 from epistemic_forge.experts.claim_expert import ClaimLatticeExpert
 from epistemic_forge.experts.dialectic_expert import HegelianExpert
 from epistemic_forge.experts.kaggle_expert import RigorSentinelExpert
+from epistemic_forge.pipeline.l1_5_adas import generate_dynamic_expert
 
 
 class SemanticConductor:
@@ -24,6 +25,14 @@ class SemanticConductor:
     def _route_experts(self, domain: str) -> list[EpistemicExpert]:
         """Determines which experts are required based on the domain."""
         active_experts = [ClaimLatticeExpert()]
+        
+        # 🧬 ADAS: Inject a dynamically generated expert specific to this domain!
+        try:
+            dynamic_expert = generate_dynamic_expert(spec)
+            active_experts.append(dynamic_expert)
+        except Exception as e:
+            logger.warning(f"ADAS failed to generate dynamic expert, continuing with standard nodes. Error: {e}")
+
         if domain in ["philosophy", "research", "hybrid"]:
             active_experts.append(HegelianExpert())
         if domain in ["kaggle", "research", "hybrid"]:
