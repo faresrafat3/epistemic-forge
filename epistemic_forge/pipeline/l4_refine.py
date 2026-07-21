@@ -1,106 +1,66 @@
-"""L4 — Local polisher (Self-Refine + Voyager-style critique patterns)."""
+"""L4 — The Adversarial Crucible (True LLM-Based Self-Refine).
 
-from __future__ import annotations
+Implements the SOTA Reflection & Self-Correction pattern.
+The system generates a critique of the draft, and if it fails the threshold,
+it rewrites the draft iteratively until perfection or max retries are reached.
+"""
+from epistemic_forge.models import ProjectSpec, RefinementFeedback, RefinedArtifact
+from epistemic_forge.llm import generate_structured
+from loguru import logger
+from typing import Tuple
 
-from dataclasses import dataclass
-from typing import List, Tuple
+def _generate_critique(spec: ProjectSpec, draft: str) -> RefinementFeedback:
+    """Uses LLM-as-a-Judge to brutally critique the draft."""
+    messages = [
+        {"role": "system", "content": "You are a merciless Peer Reviewer (NeurIPS level). Critique the artifact for logical leaps, lack of epistemic grounding, and clarity. Be brutal."},
+        {"role": "user", "content": f"Core Question: {spec.question}\nArtifact Draft:\n{draft}\n\nCritique this rigorously."}
+    ]
+    
+    return generate_structured(
+        messages=messages,
+        response_model=RefinementFeedback,
+        model=spec.target_model,
+        api_base=spec.api_base
+    )
 
-from epistemic_forge.models import ProjectSpec
+def _rewrite_draft(spec: ProjectSpec, draft: str, critique: RefinementFeedback) -> RefinedArtifact:
+    """Uses LLM to rewrite the draft based on the strict critique."""
+    messages = [
+        {"role": "system", "content": "You are a Master Synthesizer. You have received a brutal critique of a draft. Your job is to rewrite the draft perfectly, fixing all flaws without losing the core message."},
+        {"role": "user", "content": f"Original Draft:\n{draft}\n\nFlaws to Fix:\n{critique.critical_flaws}\n\nRewrite the draft to perfection."}
+    ]
+    
+    return generate_structured(
+        messages=messages,
+        response_model=RefinedArtifact,
+        model=spec.target_model,
+        api_base=spec.api_base
+    )
 
-
-@dataclass
-class RefineStep:
-    draft: str
-    feedback: str
-    score: float
-
-
-def _multi_aspect_feedback(draft: str, spec: ProjectSpec) -> Tuple[str, float, bool]:
-    aspects = {
-        "clarity": 0.0,
-        "structure": 0.0,
-        "epistemic_humility": 0.0,
-        "actionability": 0.0,
-        "domain_fit": 0.0,
-    }
-    t = draft.lower()
-    if len(draft.split()) >= 80:
-        aspects["clarity"] += 0.6
-    if any(h in t for h in ("##", "1.", "claim", "evidence", "next")):
-        aspects["structure"] += 0.7
-    if any(h in t for h in ("limit", "unknown", "risk", "assumption", "confidence")):
-        aspects["epistemic_humility"] += 0.8
-    if any(h in t for h in ("deliverable", "checklist", "baseline", "milestone", "metric")):
-        aspects["actionability"] += 0.7
-    d = spec.domain.value
-    domain_cues = {
-        "kaggle": ("cv", "baseline", "feature", "notebook"),
-        "freelance": ("client", "scope", "acceptance", "timeline"),
-        "philosophy": ("concept", "objection", "dialect", "definition"),
-        "research": ("hypothesis", "method", "evidence", "contribution"),
-        "writing": ("audience", "paragraph", "arc", "example"),
-        "hybrid": ("claim", "brief", "experiment", "next"),
-    }
-    cues = domain_cues.get(d, domain_cues["hybrid"])
-    aspects["domain_fit"] = min(1.0, sum(0.25 for c in cues if c in t))
-
-    # Normalize partial scores
-    for k, v in list(aspects.items()):
-        aspects[k] = max(0.1, min(1.0, v if v else 0.25))
-
-    total = sum(aspects.values()) / len(aspects)
-    fb_lines = [f"- {k}: {v:.2f}" for k, v in aspects.items()]
-    missing = [k for k, v in aspects.items() if v < 0.45]
-    if missing:
-        fb_lines.append("Improve: " + ", ".join(missing))
-    stop = total >= 0.72 and not missing
-    if stop:
-        fb_lines.append("STOP: quality threshold met.")
-    return "\n".join(fb_lines), total, stop
-
-
-def _apply_feedback(draft: str, feedback: str, spec: ProjectSpec) -> str:
-    addenda = []
-    fl = feedback.lower()
-    if "epistemic_humility" in fl or "improve: epistemic" in fl:
-        addenda.append(
-            "\n\n### Limits & unknowns\n"
-            "- What would falsify the main claim?\n"
-            "- Which assumptions are load-bearing?\n"
-            f"- Audience-specific risk for {spec.audience}."
-        )
-    if "actionability" in fl or "improve: actionability" in fl:
-        addenda.append(
-            "\n\n### Next actions\n"
-            "1. One measurement or artifact to produce this week.\n"
-            "2. One conversation or review to schedule.\n"
-            "3. One scope cut if time is short."
-        )
-    if "structure" in fl or "improve: structure" in fl:
-        if not draft.strip().startswith("#"):
-            draft = f"# {spec.title}\n\n## Core question\n{spec.question}\n\n" + draft
-    if "domain_fit" in fl and spec.domain.value == "kaggle":
-        addenda.append(
-            "\n\n### Validation note\n"
-            "Report metric mean±std under a leakage-safe split before claiming lift."
-        )
-    if "domain_fit" in fl and spec.domain.value == "freelance":
-        addenda.append(
-            "\n\n### Acceptance criteria\n"
-            "- Deliverable format\n- Revision rounds\n- Definition of done"
-        )
-    return draft + "".join(addenda)
-
-
-def refine_document(
-    draft: str, spec: ProjectSpec, max_iters: int = 3
-) -> Tuple[str, List[RefineStep]]:
-    history: List[RefineStep] = []
-    current = draft
-    for i in range(max_iters):
-        fb, score, stop = _multi_aspect_feedback(current, spec)
-        history.append(RefineStep(draft=current, feedback=fb, score=score))
-        if stop:
+def refine_document(spec: ProjectSpec, draft: str, max_iterations: int = 2) -> Tuple[str, float]:
+    """Iterative Self-Refine Loop (Generate -> Critique -> Rewrite)."""
+    
+    logger.info(f"L4 Refine: Entering Adversarial Crucible (Max iterations: {max_iterations})...")
+    
+    current_draft = draft
+    final_score = 0.0
+    
+    for i in range(max_iterations):
+        logger.debug(f"L4 Refine: Iteration {i+1} - Critiquing...")
+        critique = _generate_critique(spec, current_draft)
+        
+        # Calculate an overall composite score
+        overall_score = (critique.clarity_score + critique.epistemic_humility_score) / 2.0
+        final_score = overall_score
+        
+        if critique.passes_threshold and not critique.critical_flaws:
+            logger.success(f"L4 Refine: Draft passed threshold with score {overall_score:.2f}!")
             break
-        current = _apply_feedback(current, fb, spec)
-    return current, history
+            
+        logger.warning(f"L4 Refine: Draft failed. Flaws found: {len(critique.critical_flaws)}. Rewriting...")
+        rewritten = _rewrite_draft(spec, current_draft, critique)
+        current_draft = rewritten.improved_text
+        logger.debug(f"L4 Refine: Rewrite complete. Changes made: {rewritten.changes_made}")
+
+    logger.info("L4 Refine: Exiting Crucible.")
+    return current_draft, final_score

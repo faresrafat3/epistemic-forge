@@ -197,3 +197,15 @@ class ThoughtEvaluation(BaseModel):
     """LLM-as-a-Judge evaluation of a specific thought branch."""
     epistemic_score: float = Field(ge=0.0, le=1.0, description="How epistemically sound and logically rigorous this thought is.")
     critique: str = Field(description="Why this thought deserves this score.")
+
+class RefinementFeedback(BaseModel):
+    """Strict schema for the L4 Adversarial Critique."""
+    clarity_score: float = Field(ge=0.0, le=1.0, description="How clear and logically flowing the artifact is.")
+    epistemic_humility_score: float = Field(ge=0.0, le=1.0, description="Presence of explicit boundaries, assumptions, and falsifiers.")
+    critical_flaws: List[str] = Field(description="List of logical leaps, hallucinations, or unsupported claims.")
+    passes_threshold: bool = Field(description="True if scores are high enough and no critical flaws exist.")
+
+class RefinedArtifact(BaseModel):
+    """Strict schema for the L4 Rewritten Output."""
+    improved_text: str = Field(description="The heavily revised, flawless version of the text.")
+    changes_made: List[str] = Field(description="What was fixed based on the critique.")
