@@ -26,20 +26,29 @@ def _generate_thoughts(spec: ProjectSpec, context: str, beam: int) -> List[str]:
     return [p.thought_text for p in result.proposals[:beam]]
 
 def _evaluate_thought(spec: ProjectSpec, thought: str) -> float:
-    """Uses the LLM as a judge to score the epistemic value of a thought."""
+    """Process Reward Model (PRM) Evaluator.
+    Scores a thought step-by-step to prevent error propagation.
+    """
     messages = [
-        {"role": "system", "content": "You are a strict epistemic judge. Score the given analytical approach from 0.0 to 1.0 based on its logical rigor, falsifiability, and relevance."},
-        {"role": "user", "content": f"Problem: {spec.question}\nProposed Approach: {thought}\n\nEvaluate its epistemic soundness."}
+        {"role": "system", "content": "You are a Process Reward Model (PRM). Evaluate this intermediate reasoning step. Give it a score from 0.0 (contains a fatal logical flaw or hallucination) to 1.0 (flawless, rigorous epistemic reasoning)."},
+        {"role": "user", "content": f"Problem: {spec.question}
+Intermediate Step: {thought}
+
+Score this step rigorously."}
     ]
     
-    result: ThoughtEvaluation = generate_structured(
-        messages=messages,
-        response_model=ThoughtEvaluation,
-        model=spec.target_model,
-        api_base=spec.api_base
-    )
-    logger.debug(f"Thought evaluated with score {result.epistemic_score}: {result.critique}")
-    return result.epistemic_score
+    try:
+        result: ThoughtEvaluation = generate_structured(
+            messages=messages,
+            response_model=ThoughtEvaluation,
+            model=spec.target_model,
+            api_base=spec.api_base
+        )
+        logger.debug(f"⚖️ PRM Score {result.epistemic_score}: {result.critique}")
+        return result.epistemic_score
+    except Exception as e:
+        logger.warning(f"PRM Evaluation failed, defaulting to 0.5: {e}")
+        return 0.5
 
 def explore(spec: ProjectSpec, bundle: Dict[str, Any], beam: int = 3, steps: int = 2) -> SearchResult:
     """Genuine Beam Search (Tree of Thoughts) over the reasoning space."""
@@ -81,6 +90,10 @@ def explore(spec: ProjectSpec, bundle: Dict[str, Any], beam: int = 3, steps: int
             if score > step_highest_score:
                 step_highest_score = score
                 step_best_thought = thought
+                
+            if score < 0.3:
+                logger.warning(f"🛑 PRM detected fatal flaw (Score: {score}). Executing Rollback on this branch.")
+                continue # Skip adding this to the beam
                 
             if score > highest_score:
                 highest_score = score
