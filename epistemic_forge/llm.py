@@ -8,6 +8,7 @@ from loguru import logger
 from tenacity import retry, stop_after_attempt, wait_exponential
 import instructor
 from litellm import completion
+from epistemic_forge.memory.economy import budget_manager
 
 # We patch instructor to use LiteLLM's universal completion directly!
 # This is the "Hermes" way: we don't switch clients, we use one universal proxy.
@@ -59,6 +60,7 @@ def generate_structured(
             call_params["seed"] = seed
             
         response = client.chat.completions.create(**call_params)
+        budget_manager.add_usage(response._raw_response, model)
         return response
         
     except Exception as e:

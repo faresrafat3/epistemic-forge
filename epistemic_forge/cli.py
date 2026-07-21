@@ -14,6 +14,7 @@ from rich.tree import Tree
 
 from epistemic_forge.models import ProjectSpec
 from epistemic_forge.pipeline.arsenal_run import run_pipeline
+from epistemic_forge.memory.economy import budget_manager
 
 console = Console()
 
@@ -71,6 +72,7 @@ def main():
         question=args.question,
         domain=args.domain,
         target_model=args.model,
+        budget_tokens=8000,
         api_base=args.api_base
     )
 
@@ -98,6 +100,9 @@ def main():
         
         if hasattr(result, "claims"):
             display_claim_lattice(result.claims)
+            
+        console.print(f"
+[bold yellow]💰 {budget_manager.get_report()}[/bold yellow]")
         else:
             console.print("[yellow]Notice: No claims extracted in the final result.[/yellow]")
 

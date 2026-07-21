@@ -6,6 +6,7 @@ where the LLM actively proposes reasoning branches and evaluates them (LLM-as-a-
 from epistemic_forge.models import ProjectSpec, SearchResult, SearchNode, ThoughtProposalsOutput, ThoughtEvaluation
 from epistemic_forge.llm import generate_structured
 from loguru import logger
+from epistemic_forge.memory.economy import budget_manager
 from typing import Dict, Any, List
 import uuid
 
@@ -53,6 +54,9 @@ def explore(spec: ProjectSpec, bundle: Dict[str, Any], beam: int = 3, steps: int
     highest_score = -1.0
     
     for step in range(steps):
+        if budget_manager.is_budget_exceeded():
+            logger.warning("L3 Search: Halting Deep Search to preserve token budget. Transitioning to L4.")
+            break
         logger.info(f"L3 Search: Expanding Level {step+1}/{steps}...")
         
         # 1. Propose (Branching)
