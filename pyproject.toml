@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "epistemic-forge"
-version = "0.1.0"
+version = "1.0.0-rc1"
 description = "ARSENAL-powered epistemic research kit: claims, dialectics, freelancing briefs, and Kaggle notebooks"
 readme = "README.md"
 requires-python = ">=3.10"
