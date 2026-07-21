@@ -1,8 +1,9 @@
-"""Claim Lattice Expert Implementation."""
+"""Claim Lattice Expert Implementation (Grounded with Real-World Search)."""
 from typing import Dict, Any
 from epistemic_forge.experts.base import EpistemicExpert
 from epistemic_forge.models import ProjectSpec, ClaimLatticeOutput
 from epistemic_forge.llm import generate_structured
+from epistemic_forge.tools.search import search_web
 from loguru import logger
 
 class ClaimLatticeExpert(EpistemicExpert):
@@ -10,27 +11,33 @@ class ClaimLatticeExpert(EpistemicExpert):
     
     @property
     def expert_name(self) -> str:
-        return "Epistemic_Claim_Lattice_Generator"
+        return "Grounded_Claim_Lattice_Generator"
 
     def analyze(self, spec: ProjectSpec, context: Dict[str, Any]) -> ClaimLatticeOutput:
-        """Forces the LLM to generate claims ONLY if it can provide a warrant/explanation."""
+        """Uses Live Web Search to ground the LLM's claims in reality."""
+        
+        # 1. Fetch real-world context before asking the LLM to build claims
+        logger.debug("Gathering live empirical data to prevent hallucination...")
+        search_query = f"{spec.question} scientific consensus"
+        live_evidence = search_web(search_query, max_results=3)
         
         messages = [
             {
                 "role": "system", 
                 "content": (
-                    "You are a rigorous analytical philosopher and scientist. Your task is to break down the user's premise into a 'Claim Lattice'. "
-                    "CRITICAL RULE: You are strictly forbidden from making ANY claim without providing an 'epistemic_warrant' (a clear logical explanation or evidence) "
-                    "and a 'potential_falsifier' (what would prove it wrong). No confident mush allowed."
+                    "You are a rigorous analytical philosopher and empirical scientist. Your task is to break down the user's premise into a 'Claim Lattice'. "
+                    "CRITICAL RULE: You MUST ground your claims using the 'Live Evidence' provided. Do not hallucinate. "
+                    "You are strictly forbidden from making ANY claim without providing an 'epistemic_warrant' (a clear logical explanation) "
+                    "and a 'potential_falsifier'. No confident mush allowed."
                 )
             },
             {
                 "role": "user", 
-                "content": f"Core Premise: {spec.question}\nKeywords: {spec.keywords}\nDeconstruct this into rigorously grounded claims."
+                "content": f"Core Premise: {spec.question}\nKeywords: {spec.keywords}\n\n=== LIVE EMPIRICAL EVIDENCE ===\n{live_evidence}\n=====================\n\nDeconstruct this into rigorously grounded claims, citing the evidence where applicable."
             }
         ]
         
-        logger.debug("Dispatching to LLM for Claim Lattice Generation (Enforcing Truthfulness)...")
+        logger.debug("Dispatching to LLM for Grounded Claim Lattice Generation...")
         return generate_structured(
             messages=messages,
             response_model=ClaimLatticeOutput,
