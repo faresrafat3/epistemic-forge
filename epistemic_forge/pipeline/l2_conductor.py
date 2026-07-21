@@ -22,8 +22,9 @@ class SemanticConductor:
         # Register available experts
         self.experts: list[EpistemicExpert] = []
 
-    def _route_experts(self, domain: str) -> list[EpistemicExpert]:
+    def _route_experts(self, spec: ProjectSpec) -> list[EpistemicExpert]:
         """Determines which experts are required based on the domain."""
+        domain = spec.domain
         active_experts = [ClaimLatticeExpert()]
         
         # 🧬 ADAS: Inject a dynamically generated expert specific to this domain!
@@ -48,7 +49,7 @@ class SemanticConductor:
         """
         logger.info(f"L2 Conductor: Routing inquiry for domain [{spec.domain}]")
 
-        active_experts = self._route_experts(spec.domain)
+        active_experts = self._route_experts(spec)
         results = {}
 
         for expert in active_experts:
