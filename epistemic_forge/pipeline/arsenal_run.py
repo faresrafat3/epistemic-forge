@@ -142,7 +142,7 @@ class ArsenalRun:
             self.reflexion.reflect_on_failure(
                 trial=trial,
                 score=score,
-                notes=f"verdict={review['verdict']}; missing={review.get('revision_needed')}",
+                notes=f"verdict={review.get('verdict', 'unknown')}; missing={review.get('revision_needed', [])}",
             )
 
         assert best is not None

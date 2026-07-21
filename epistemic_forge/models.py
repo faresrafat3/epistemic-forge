@@ -209,3 +209,18 @@ class RefinedArtifact(BaseModel):
     """Strict schema for the L4 Rewritten Output."""
     improved_text: str = Field(description="The heavily revised, flawless version of the text.")
     changes_made: List[str] = Field(description="What was fixed based on the critique.")
+
+class PeerReviewScores(BaseModel):
+    clarity: float = Field(ge=0.0, le=1.0)
+    structure: float = Field(ge=0.0, le=1.0)
+    soundness: float = Field(ge=0.0, le=1.0)
+    actionability: float = Field(ge=0.0, le=1.0)
+    humility: float = Field(ge=0.0, le=1.0)
+
+class FinalPeerReview(BaseModel):
+    """Strict schema for the L6 AI Scientist Wrap-up."""
+    scores: PeerReviewScores
+    overall_score: float = Field(ge=0.0, le=1.0, description="Average of all metrics.")
+    revision_needed: List[str] = Field(description="Areas that still need work if any.")
+    verdict: str = Field(description="Must be one of: 'accept', 'accept_with_minor_revisions', 'major_revisions', 'reject'")
+    final_comments: str = Field(description="A formal peer-review summary.")
