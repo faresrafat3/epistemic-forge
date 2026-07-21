@@ -235,3 +235,9 @@ class DynamicExpertSchema(BaseModel):
         description="List of fields the expert must extract. Format: {'field_name': 'description'}"
     )
     system_prompt: str = Field(description="The ruthless, highly specific prompt guiding this new expert.")
+
+class SearchResult(BaseModel):
+    best_thought: str
+    nodes: List[SearchNode]
+    mode_used: str
+    score: float

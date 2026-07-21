@@ -50,6 +50,14 @@ def generate_structured(
         if api_base:
             call_params["api_base"] = api_base
         if api_key:
+            import os
+            # Force it into environment for litellm
+            if "openrouter" in model:
+                os.environ["OPENROUTER_API_KEY"] = api_key
+            elif "gemini" in model:
+                os.environ["GEMINI_API_KEY"] = api_key
+            else:
+                os.environ["OPENAI_API_KEY"] = api_key
             call_params["api_key"] = api_key
             
         # Add any extra kwargs (like top_p, max_tokens) dynamically

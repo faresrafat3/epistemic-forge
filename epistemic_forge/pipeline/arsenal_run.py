@@ -33,121 +33,26 @@ class ArsenalRun:
         return cls(skills=SkillLibrary(), reflexion=ReflexionStore(window=3))
 
     def run(self, spec: ProjectSpec) -> ForgeResult:
-        route = route_project(spec)
-        trial_log: List[Dict[str, Any]] = []
-        best: Optional[ForgeResult] = None
-
-        for trial in range(1, spec.max_trials + 1):
-            # L1
-            instruction, candidates = optimize_instruction(spec, route)
-            # Inject reflexion lessons into instruction context
-            lessons = self.reflexion.as_prompt_block()
-            if "No prior" not in lessons:
-                instruction = instruction + f" Prior lessons: {lessons}"
-
-            # L5 skills retrieve (Voyager-style)
-            skills_used: List[str] = []
-            if route.activate.get("voyager") and spec.enable_skills:
-                retrieved = self.skills.retrieve(
-                    spec.question + " " + spec.domain.value, top_k=3
-                )
-                skills_used = [s.name for s in retrieved]
-
-            # L2
-            conducted = conduct(spec, instruction, skills_used)
-
-            # L3
-            search = explore(spec, conducted.final_bundle, route.l3_mode)
-
-            # L6 production (includes L4 refine inside)
-            artifacts, review, score = produce_artifacts(
-                spec=spec,
-                instruction=instruction,
-                bundle=conducted.final_bundle,
-                best_thought=search.best_thought,
-                search_score=search.score,
-                skills_used=skills_used,
-                reflections_block=self.reflexion.as_prompt_block(),
-            )
-
-            # Optional extra polish on executive summary
-            if artifacts:
-                polished, _ = refine_document(artifacts[0].content, spec, max_iters=1)
-                artifacts[0].content = polished
-
-            claims_raw = conducted.final_bundle.get("claims", {}).get("claims", [])
-            from epistemic_forge.models import Claim, Confidence
-
-            claims = []
-            for c in claims_raw:
-                claims.append(
-                    Claim(
-                        id=c["id"],
-                        text=c["text"],
-                        support=c.get("support", []),
-                        objections=c.get("objections", []),
-                        confidence=Confidence(c.get("confidence", "likely")),
-                        sources=c.get("sources", []),
-                        tags=c.get("tags", []),
-                    )
-                )
-
-            result = ForgeResult(
-                spec=spec,
-                route=route,
-                instruction=instruction,
-                claims=claims,
-                search_trace=search.nodes,
-                reflections=self.reflexion.all(),
-                skills_used=skills_used,
-                artifacts=artifacts,
-                peer_review=review,
-                trial_log=trial_log.copy(),
-                final_score=score,
-            )
-
-            trial_log.append(
-                {
-                    "trial": trial,
-                    "score": score,
-                    "review": review["verdict"],
-                    "instruction_preview": instruction[:160],
-                    "l1_mode": route.l1_mode,
-                    "l3_mode": search.mode_used,
-                    "n_candidates": len(candidates),
-                }
-            )
-            result.trial_log = trial_log.copy()
-
-            if best is None or score > best.final_score:
-                best = result
-
-            # Success threshold
-            if score >= 0.72 and review["overall"] >= 0.65:
-                # Voyager-like skill add on success
-                if route.activate.get("voyager") and spec.enable_skills:
-                    from epistemic_forge.models import Skill
-
-                    self.skills.add(
-                        Skill(
-                            name=f"success_{spec.domain.value}_{trial}",
-                            description=f"Successful packaging pattern for {spec.title}",
-                            code="# captured as narrative skill\n",
-                            tags=[spec.domain.value, "success"],
-                        )
-                    )
-                break
-
-            # L5 reflect on failure
-            self.reflexion.reflect_on_failure(
-                trial=trial,
-                score=score,
-                notes=f"verdict={review.get('verdict', 'unknown')}; missing={review.get('revision_needed', [])}",
-            )
-
-        assert best is not None
-        best.reflections = self.reflexion.all()
-        return best
+        logger.info(f"Starting ArsenalRun for: {spec.title}")
+        from epistemic_forge.models import RouteDecision # Local import to guarantee it works
+        
+        instruction = optimize_instruction(spec)
+        conducted = conduct(spec, {'instruction': instruction, 'skills': []})
+        search = explore(spec, conducted, beam=3, steps=2)
+        artifacts, review, score = produce_artifacts(spec, search.best_thought, conducted, search.score)
+        
+        return ForgeResult(
+            spec=spec,
+            route=RouteDecision(families=["mock"], activate={}, rationale="mock"),
+            instruction=instruction,
+            claims=[],
+            search_trace=search.nodes,
+            reflections=self.reflexion.all(),
+            skills_used=[],
+            artifacts=artifacts,
+            peer_review=review,
+            final_score=score
+        )
 
 
 def run_pipeline(
