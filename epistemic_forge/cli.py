@@ -100,11 +100,9 @@ def main():
         
         if hasattr(result, "claims"):
             display_claim_lattice(result.claims)
-            
-        console.print(f"
-[bold yellow]💰 {budget_manager.get_report()}[/bold yellow]")
         else:
             console.print("[yellow]Notice: No claims extracted in the final result.[/yellow]")
+        console.print(f"\n[bold yellow]💰 {budget_manager.get_report()}[/bold yellow]")
 
     except Exception as e:
         console.print_exception(show_locals=True)
