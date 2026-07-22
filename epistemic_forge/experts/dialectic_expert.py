@@ -1,7 +1,6 @@
 """Hegelian Synthesis Expert Implementation."""
 
 from typing import Dict, Any
-from pydantic import BaseModel
 
 from epistemic_forge.experts.base import EpistemicExpert
 from epistemic_forge.models import ProjectSpec, HegelianDialecticOutput

@@ -33,7 +33,9 @@ def _seed_instructions(spec: ProjectSpec) -> list[str]:
     ]
 
 
-def _score_instruction(spec: ProjectSpec, instruction: str, generation: int = 0) -> float:
+def _score_instruction(
+    spec: ProjectSpec, instruction: str, generation: int = 0
+) -> float:
     score = 0.4 + 0.05 * generation
     q_tokens = {t.lower() for t in spec.question.split() if len(t) > 3}
     i_tokens = {t.lower().strip(".,:;!?") for t in instruction.split()}
@@ -48,7 +50,10 @@ def _score_instruction(spec: ProjectSpec, instruction: str, generation: int = 0)
 def ape_generate(spec: ProjectSpec) -> List[InstructionCandidate]:
     """Generate deterministic APE-style instruction seeds with heuristic scoring."""
     seeds = _seed_instructions(spec)
-    ranked = [InstructionCandidate(instruction=s, score=_score_instruction(spec, s)) for s in seeds]
+    ranked = [
+        InstructionCandidate(instruction=s, score=_score_instruction(spec, s))
+        for s in seeds
+    ]
     ranked.sort(key=lambda c: c.score, reverse=True)
     return ranked
 
@@ -76,7 +81,9 @@ def opro_evolve(
 
 def optimize_instruction(spec: ProjectSpec) -> str:
     """Generate best instruction via LLM, with deterministic fallback for CI/offline runs."""
-    logger.info("L1 Optimizer: Dynamically generating task-specific instruction (OPRO style)...")
+    logger.info(
+        "L1 Optimizer: Dynamically generating task-specific instruction (OPRO style)..."
+    )
     messages = [
         {
             "role": "system",

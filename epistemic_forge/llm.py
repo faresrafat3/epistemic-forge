@@ -3,6 +3,7 @@
 Absolute flexibility: Use ANY model from ANY provider with zero code changes.
 Supports standard formats: 'openai/gpt-4o', 'anthropic/claude-3-sonnet', 'ollama/llama3', 'azure/...', etc.
 """
+
 from pydantic import BaseModel
 from loguru import logger
 from tenacity import retry, stop_after_attempt, wait_exponential
@@ -39,7 +40,11 @@ def _offline_fallback(response_model: type[BaseModel], messages: list) -> BaseMo
                 "## Next actions\nList 3 concrete steps with acceptance criteria."
             ),
             rationale="Structured Toulmin-style prompt improves rigor and actionability.",
-            expected_failure_modes=["overclaiming", "missing counterarguments", "unclear next steps"],
+            expected_failure_modes=[
+                "overclaiming",
+                "missing counterarguments",
+                "unclear next steps",
+            ],
         )
     if model_name == "ThoughtProposalsOutput":
         return response_model(
@@ -56,7 +61,9 @@ def _offline_fallback(response_model: type[BaseModel], messages: list) -> BaseMo
             ]
         )
     if model_name == "ThoughtEvaluation":
-        return response_model(epistemic_score=0.78, critique="Grounded, cautious, and testable.")
+        return response_model(
+            epistemic_score=0.78, critique="Grounded, cautious, and testable."
+        )
     if model_name == "RefinementFeedback":
         return response_model(
             clarity_score=0.86,
@@ -72,11 +79,21 @@ def _offline_fallback(response_model: type[BaseModel], messages: list) -> BaseMo
                 "## Objections\nRisks and counterarguments.\n## Confidence\nProvisional, assumption-aware.\n"
                 "## Next actions\n- Ship baseline\n- Audit failure cases\n- Decide next experiment"
             ),
-            changes_made=["added explicit objections", "added assumptions", "added action checklist"],
+            changes_made=[
+                "added explicit objections",
+                "added assumptions",
+                "added action checklist",
+            ],
         )
     if model_name == "FinalPeerReview":
         return response_model(
-            scores={"clarity": 0.82, "structure": 0.84, "soundness": 0.79, "actionability": 0.86, "humility": 0.88},
+            scores={
+                "clarity": 0.82,
+                "structure": 0.84,
+                "soundness": 0.79,
+                "actionability": 0.86,
+                "humility": 0.88,
+            },
             overall_score=0.84,
             revision_needed=[],
             verdict="accept_with_minor_revisions",
@@ -86,7 +103,10 @@ def _offline_fallback(response_model: type[BaseModel], messages: list) -> BaseMo
         return response_model(
             expert_class_name="PragmaticRiskExpert",
             expert_description="Extracts risks, assumptions, and validation checks.",
-            fields_to_extract=[{"risk": "Main failure mode"}, {"check": "Validation action"}],
+            fields_to_extract=[
+                {"risk": "Main failure mode"},
+                {"check": "Validation action"},
+            ],
             system_prompt="Extract concrete risks and validation steps only.",
         )
     if model_name == "ClaimLatticeOutput":
@@ -114,7 +134,10 @@ def _offline_fallback(response_model: type[BaseModel], messages: list) -> BaseMo
         )
     if model_name == "RigorSentinelOutput":
         return response_model(
-            epistemic_blind_spots=["Hidden leakage pathways", "Untracked distribution shift"],
+            epistemic_blind_spots=[
+                "Hidden leakage pathways",
+                "Untracked distribution shift",
+            ],
             falsification_metric="Out-of-fold score stability across robust split schemes.",
             robust_baseline="Simple regularized model with strict CV and leakage audit.",
         )
@@ -134,38 +157,43 @@ def _missing_credentials(model: str, api_key: str | None) -> bool:
         return not os.getenv("GEMINI_API_KEY")
     return False
 
+
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10))
 def generate_structured(
-    messages: list, 
-    response_model: type[BaseModel], 
+    messages: list,
+    response_model: type[BaseModel],
     model: str = "gpt-4o-mini",  # Can be ANY litellm supported string, e.g., 'ollama/llama3'
     temperature: float = 0.0,
     seed: int = 42,
     api_base: str = None,
     api_key: str = None,
-    **kwargs
+    **kwargs,
 ) -> BaseModel:
     """
     Universal Hermes-style Structured Extraction.
     You can pass the provider in the model string (e.g., 'anthropic/claude-3-opus-20240229').
     """
     if _missing_credentials(model, api_key):
-        logger.warning(f"🌐 [Hermes Router] Missing credentials for [{model}], using deterministic fallback.")
+        logger.warning(
+            f"🌐 [Hermes Router] Missing credentials for [{model}], using deterministic fallback."
+        )
         return _offline_fallback(response_model, messages)
 
     if not client:
         raise ValueError("Universal LLM Router is not initialized.")
-        
+
     try:
-        logger.debug(f"🌐 [Hermes Router] Dispatching to [{model}] for schema [{response_model.__name__}]...")
-        
+        logger.debug(
+            f"🌐 [Hermes Router] Dispatching to [{model}] for schema [{response_model.__name__}]..."
+        )
+
         call_params = {
             "model": model,
             "messages": messages,
             "response_model": response_model,
             "temperature": temperature,
         }
-        
+
         # Inject optional routing Overrides
         if api_base:
             call_params["api_base"] = api_base
@@ -178,18 +206,20 @@ def generate_structured(
             else:
                 os.environ["OPENAI_API_KEY"] = api_key
             call_params["api_key"] = api_key
-            
+
         # Add any extra kwargs (like top_p, max_tokens) dynamically
         call_params.update(kwargs)
-            
+
         # Seed is standard in LiteLLM for supported models
         if "gpt" in model or "llama" in model:
             call_params["seed"] = seed
-            
+
         response = client.chat.completions.create(**call_params)
         budget_manager.add_usage(response._raw_response, model)
         return response
-        
+
     except Exception as e:
-        logger.error(f"🌐 [Hermes Router] Critical Failure for model '{model}': {str(e)}")
+        logger.error(
+            f"🌐 [Hermes Router] Critical Failure for model '{model}': {str(e)}"
+        )
         raise

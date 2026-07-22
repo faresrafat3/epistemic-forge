@@ -41,7 +41,8 @@ def route_project(spec: ProjectSpec) -> RouteDecision:
         )
     )
     needs_code = domain in {Domain.KAGGLE, Domain.FREELANCE, Domain.HYBRID} or any(
-        k in q for k in ("python", "notebook", "kaggle", "baseline", "model", "pipeline")
+        k in q
+        for k in ("python", "notebook", "kaggle", "baseline", "model", "pipeline")
     )
     open_ended = domain in {Domain.RESEARCH, Domain.PHILOSOPHY, Domain.HYBRID} or hard
 
@@ -53,7 +54,9 @@ def route_project(spec: ProjectSpec) -> RouteDecision:
         activate["lats"] = True  # env/test-like loops for code paths
         activate["voyager"] = True
         l3_mode = "cascade"
-        rationale_bits.append("code/Kaggle → agent loops + skill memory + ToT→LATS cascade")
+        rationale_bits.append(
+            "code/Kaggle → agent loops + skill memory + ToT→LATS cascade"
+        )
     if domain == Domain.FREELANCE:
         families += ["In-Context Learning", "Answer Engineering", "Self-Criticism"]
         activate["meta"] = True

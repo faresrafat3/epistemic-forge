@@ -57,7 +57,9 @@ class SkillLibrary:
                     score += 2
             scored.append((score, s))
         scored.sort(key=lambda x: x[0], reverse=True)
-        return [s for sc, s in scored[:top_k] if sc > 0] or list(self._skills.values())[:top_k]
+        return [s for sc, s in scored[:top_k] if sc > 0] or list(self._skills.values())[
+            :top_k
+        ]
 
     def add(self, skill: Skill) -> None:
         name = skill.name

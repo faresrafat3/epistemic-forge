@@ -207,9 +207,23 @@ def score_document(
         length_balance = 0.45
 
     domain_patterns = {
-        "philosophy": ["concept", "dialect", "objection", "agency", "moral", "definition"],
+        "philosophy": [
+            "concept",
+            "dialect",
+            "objection",
+            "agency",
+            "moral",
+            "definition",
+        ],
         "kaggle": ["cv", "baseline", "leak", "metric", "feature", "split", "notebook"],
-        "freelance": ["client", "scope", "milestone", "acceptance", "deliverable", "timeline"],
+        "freelance": [
+            "client",
+            "scope",
+            "milestone",
+            "acceptance",
+            "deliverable",
+            "timeline",
+        ],
         "research": ["hypothesis", "method", "evidence", "contribution", "experiment"],
         "writing": ["audience", "paragraph", "arc", "draft"],
         "hybrid": ["claim", "brief", "experiment", "next"],

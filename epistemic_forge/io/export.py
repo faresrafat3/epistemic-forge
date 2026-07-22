@@ -12,7 +12,9 @@ from epistemic_forge.models import ForgeResult
 def export_result(result: ForgeResult, out_dir: Union[str, Path]) -> Path:
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
-    result_dict = result.model_dump() if hasattr(result, "model_dump") else result.to_dict()
+    result_dict = (
+        result.model_dump() if hasattr(result, "model_dump") else result.to_dict()
+    )
     (out / "result.json").write_text(
         json.dumps(result_dict, indent=2, ensure_ascii=False), encoding="utf-8"
     )
@@ -27,7 +29,9 @@ def export_result(result: ForgeResult, out_dir: Union[str, Path]) -> Path:
         "score": result.final_score,
         "review": result.peer_review,
         "files": [a.path_hint or a.name for a in result.artifacts],
-        "route": result.route.model_dump() if hasattr(result.route, "model_dump") else result.route.to_dict(),
+        "route": result.route.model_dump()
+        if hasattr(result.route, "model_dump")
+        else result.route.to_dict(),
         "instruction": result.instruction,
     }
     (out / "MANIFEST.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")

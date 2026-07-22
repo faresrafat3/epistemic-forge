@@ -26,13 +26,15 @@ class SemanticConductor:
         """Determines which experts are required based on the domain."""
         domain = spec.domain
         active_experts = [ClaimLatticeExpert()]
-        
+
         # 🧬 ADAS: Inject a dynamically generated expert specific to this domain!
         try:
             dynamic_expert = generate_dynamic_expert(spec)
             active_experts.append(dynamic_expert)
         except Exception as e:
-            logger.warning(f"ADAS failed to generate dynamic expert, continuing with standard nodes. Error: {e}")
+            logger.warning(
+                f"ADAS failed to generate dynamic expert, continuing with standard nodes. Error: {e}"
+            )
 
         if domain in ["philosophy", "research", "hybrid"]:
             active_experts.append(HegelianExpert())

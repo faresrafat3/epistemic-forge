@@ -1,24 +1,24 @@
 from __future__ import annotations
 from loguru import logger
-"""Full ARSENAL-inspired pipeline orchestration for Epistemic Forge."""
-
-
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
-
+from typing import List, Optional
 from epistemic_forge.memory.reflexion_store import ReflexionStore
 from epistemic_forge.memory.skill_library import SkillLibrary
 from epistemic_forge.models import (
+from epistemic_forge.pipeline.l1_optimizer import optimize_instruction
+from epistemic_forge.pipeline.l2_conductor import conduct
+from epistemic_forge.pipeline.l3_search import explore
+from epistemic_forge.pipeline.l6_stages import produce_artifacts
+
+
+"""Full ARSENAL-inspired pipeline orchestration for Epistemic Forge."""
+
+
+
     Domain,
     ForgeResult,
     ProjectSpec,
 )
-from epistemic_forge.pipeline.l1_optimizer import optimize_instruction
-from epistemic_forge.pipeline.l2_conductor import conduct
-from epistemic_forge.pipeline.l3_search import explore
-from epistemic_forge.pipeline.l4_refine import refine_document
-from epistemic_forge.pipeline.l6_stages import produce_artifacts
-from epistemic_forge.pipeline.router import route_project
 
 
 @dataclass
@@ -34,13 +34,17 @@ class ArsenalRun:
 
     def run(self, spec: ProjectSpec) -> ForgeResult:
         logger.info(f"Starting ArsenalRun for: {spec.title}")
-        from epistemic_forge.models import RouteDecision # Local import to guarantee it works
-        
+        from epistemic_forge.models import (
+            RouteDecision,
+        )  # Local import to guarantee it works
+
         instruction = optimize_instruction(spec)
-        conducted = conduct(spec, {'instruction': instruction, 'skills': []})
+        conducted = conduct(spec, {"instruction": instruction, "skills": []})
         search = explore(spec, conducted, beam=3, steps=2)
-        artifacts, review, score = produce_artifacts(spec, search.best_thought, conducted, search.score)
-        
+        artifacts, review, score = produce_artifacts(
+            spec, search.best_thought, conducted, search.score
+        )
+
         return ForgeResult(
             spec=spec,
             route=RouteDecision(families=["mock"], activate={}, rationale="mock"),
@@ -51,7 +55,7 @@ class ArsenalRun:
             skills_used=[],
             artifacts=artifacts,
             peer_review=review,
-            final_score=score
+            final_score=score,
         )
 
 

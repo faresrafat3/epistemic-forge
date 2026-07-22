@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from epistemic_forge.benchmark.baseline import baseline_answer
-from epistemic_forge.benchmark.metrics import QualityScores, score_document, toulmin_coverage
+from epistemic_forge.benchmark.metrics import score_document, toulmin_coverage
 from epistemic_forge.pipeline.arsenal_run import run_pipeline
 
 
@@ -129,7 +129,9 @@ def run_benchmark(cases: Optional[List[BenchCase]] = None) -> Dict[str, Any]:
     cases = cases or BENCHMARK_CASES
     rows: List[CaseResult] = []
     for case in cases:
-        base_txt = baseline_answer(case.title, case.question, case.domain, case.keywords)
+        base_txt = baseline_answer(
+            case.title, case.question, case.domain, case.keywords
+        )
         forge_txt = _forge_text(case)
         b = score_document(base_txt, case.domain, case.keywords)
         f = score_document(forge_txt, case.domain, case.keywords)
@@ -164,7 +166,9 @@ def run_benchmark(cases: Optional[List[BenchCase]] = None) -> Dict[str, Any]:
         "avg_baseline_overall": round(avg_base, 4),
         "avg_forge_overall": round(avg_forge, 4),
         "avg_lift_overall": round(avg_forge - avg_base, 4),
-        "avg_lift_overall_pct": round(100 * (avg_forge - avg_base) / max(avg_base, 1e-6), 1),
+        "avg_lift_overall_pct": round(
+            100 * (avg_forge - avg_base) / max(avg_base, 1e-6), 1
+        ),
         "avg_baseline_toulmin": round(avg_bt, 4),
         "avg_forge_toulmin": round(avg_ft, 4),
         "avg_lift_toulmin": round(avg_ft - avg_bt, 4),
@@ -198,8 +202,8 @@ def write_benchmark_reports(out_dir: str | Path) -> Dict[str, Any]:
         "",
         "## Summary",
         "",
-        f"| Metric | Baseline | Epistemic Forge | Lift |",
-        f"|---|---:|---:|---:|",
+        "| Metric | Baseline | Epistemic Forge | Lift |",
+        "|---|---:|---:|---:|",
         f"| Overall quality (0–1) | {s['avg_baseline_overall']:.3f} | {s['avg_forge_overall']:.3f} | **+{s['avg_lift_overall']:.3f} ({s['avg_lift_overall_pct']:.0f}%)** |",
         f"| Toulmin coverage (0–1) | {s['avg_baseline_toulmin']:.3f} | {s['avg_forge_toulmin']:.3f} | **+{s['avg_lift_toulmin']:.3f} ({s['avg_lift_toulmin_pct']:.0f}%)** |",
         f"| Wins (overall) | — | **{s['forge_wins_overall']}/{s['n_cases']}** | — |",
