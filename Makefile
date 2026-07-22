@@ -1,4 +1,4 @@
-.PHONY: help install test lint run clean
+.PHONY: help install test lint clean cli ui serve
 
 # Default command when just running 'make'
 help:
@@ -10,6 +10,7 @@ help:
 	@echo "  make lint       - Run Ruff to check code formatting and errors"
 	@echo "  make clean      - Remove __pycache__, .pytest_cache, and build files"
 	@echo "  make cli        - Test the CLI interface directly"
+	@echo "  make serve      - Launch the RESTful FastAPI backend server"
 
 install:
 	@echo "Installing Epistemic Forge..."
@@ -37,3 +38,7 @@ ui:
 	@echo "Launching Streamlit dashboard (requires the 'ui' extra)..."
 	pip install -e ".[ui]"
 	streamlit run epistemic_forge/ui/app.py
+
+serve:
+	@echo "Booting Enterprise API Server..."
+	uvicorn epistemic_forge.ui.api:app --host 0.0.0.0 --port 8000 --reload

@@ -127,6 +127,7 @@ def main():
 
         if hasattr(result, "claims") and result.claims:
             display_claim_lattice(result.claims)
+
         else:
             console.print(
                 "[yellow]Notice: No claims extracted in the final result.[/yellow]"

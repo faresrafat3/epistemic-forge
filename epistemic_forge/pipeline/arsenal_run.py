@@ -101,7 +101,7 @@ class ArsenalRun:
         )
 
 
-def run_pipeline(
+async def run_pipeline(
     title: str,
     question: str,
     domain: str = "hybrid",
