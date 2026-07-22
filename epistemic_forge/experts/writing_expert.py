@@ -1,13 +1,14 @@
 """L2 Epistemic Synthesis Engine: Chain of Density Architect."""
 
-from epistemic_forge.models import ProjectSpec, ChainOfDensityOutput
+from typing import Any
+
 from epistemic_forge.llm import generate_structured
-from typing import Dict, Any
+from epistemic_forge.models import ChainOfDensityOutput, ProjectSpec
 
 
 def outline_and_draft(
-    spec: ProjectSpec, claims_bundle: Dict[str, Any], instruction: str
-) -> Dict[str, Any]:
+    spec: ProjectSpec, claims_bundle: dict[str, Any], instruction: str
+) -> dict[str, Any]:
     """Compress the dialectic into a hyper-dense, falsifiable artifact."""
 
     # Gather previous context to compress

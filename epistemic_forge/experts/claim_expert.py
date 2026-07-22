@@ -1,10 +1,14 @@
-"""Claim Lattice Expert Implementation (Agentic RAG Grounded)."""
-from typing import Dict, Any
-from epistemic_forge.experts.base import EpistemicExpert
-from epistemic_forge.models import ProjectSpec, ClaimLatticeOutput
-from epistemic_forge.llm import generate_structured
-from epistemic_forge.tools.search import multi_hop_search
+"""Claim Lattice Expert Implementation (Grounded with Real-World Search)."""
+
+from typing import Any
+
 from loguru import logger
+
+from epistemic_forge.experts.base import EpistemicExpert
+from epistemic_forge.llm import generate_structured
+from epistemic_forge.models import ClaimLatticeOutput, ProjectSpec
+from epistemic_forge.tools.search import search_web
+
 
 class ClaimLatticeExpert(EpistemicExpert):
     """Deconstructs the question into a structured, epistemically grounded claim lattice."""
@@ -13,13 +17,15 @@ class ClaimLatticeExpert(EpistemicExpert):
     def expert_name(self) -> str:
         return "Grounded_Claim_Lattice_Generator"
 
-    def analyze(self, spec: ProjectSpec, context: Dict[str, Any]) -> ClaimLatticeOutput:
-        """Uses Agentic Multi-Hop Web Search to ground the LLM's claims in reality."""
-        
-        # 1. Fetch real-world context using Multi-Hop Agentic RAG
-        logger.debug("Gathering multi-hop empirical data (Thesis + Antithesis) from the web...")
-        live_evidence = multi_hop_search(spec.question, max_hops=2)
-        
+    def analyze(self, spec: ProjectSpec, context: dict[str, Any]) -> ClaimLatticeOutput:
+        """Uses Live Web Search to ground the LLM's claims in reality."""
+
+        # 1. Fetch real-world context before asking the LLM to build claims
+        logger.debug("Gathering live empirical data to prevent hallucination...")
+        search_query = f"{spec.question} scientific consensus"
+        live_evidence = search_web(search_query, max_results=3)
+
+
         messages = [
             {
                 "role": "system", 

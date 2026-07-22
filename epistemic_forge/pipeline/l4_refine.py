@@ -5,10 +5,11 @@ The system generates a critique of the draft, and if it fails the threshold,
 it rewrites the draft iteratively until perfection or max retries are reached.
 """
 
-from epistemic_forge.models import ProjectSpec, RefinementFeedback, RefinedArtifact
-from epistemic_forge.llm import generate_structured
+
 from loguru import logger
-from typing import Tuple
+
+from epistemic_forge.llm import generate_structured
+from epistemic_forge.models import ProjectSpec, RefinedArtifact, RefinementFeedback
 
 
 def _generate_critique(spec: ProjectSpec, draft: str) -> RefinementFeedback:
@@ -57,7 +58,7 @@ def _rewrite_draft(
 
 def refine_document(
     spec: ProjectSpec, draft: str, max_iterations: int = 2
-) -> Tuple[str, float]:
+) -> tuple[str, float]:
     """Iterative Self-Refine Loop (Generate -> Critique -> Rewrite)."""
 
     logger.info(

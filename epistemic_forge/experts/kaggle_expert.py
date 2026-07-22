@@ -1,10 +1,10 @@
 """Data Leakage and Scientific Rigor Expert Implementation."""
 
-from typing import Dict, Any
+from typing import Any
 
 from epistemic_forge.experts.base import EpistemicExpert
-from epistemic_forge.models import ProjectSpec, RigorSentinelOutput
 from epistemic_forge.llm import generate_structured
+from epistemic_forge.models import ProjectSpec, RigorSentinelOutput
 
 
 class RigorSentinelExpert(EpistemicExpert):
@@ -15,7 +15,7 @@ class RigorSentinelExpert(EpistemicExpert):
         return "Rigor_And_Leakage_Sentinel"
 
     def analyze(
-        self, spec: ProjectSpec, context: Dict[str, Any]
+        self, spec: ProjectSpec, context: dict[str, Any]
     ) -> RigorSentinelOutput:
         """Identifies target leakage and establishes strict falsification metrics."""
         messages = [

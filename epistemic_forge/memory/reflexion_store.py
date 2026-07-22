@@ -2,15 +2,13 @@
 
 from __future__ import annotations
 
-from typing import List
-
 from epistemic_forge.models import Reflection
 
 
 class ReflexionStore:
     def __init__(self, window: int = 3):
         self.window = window
-        self._items: List[Reflection] = []
+        self._items: list[Reflection] = []
 
     def add(self, reflection: Reflection) -> None:
         self._items.append(reflection)
@@ -27,7 +25,7 @@ class ReflexionStore:
             )
         return "\n".join(lines)
 
-    def all(self) -> List[Reflection]:
+    def all(self) -> list[Reflection]:
         return list(self._items)
 
     def reflect_on_failure(self, trial: int, score: float, notes: str) -> Reflection:

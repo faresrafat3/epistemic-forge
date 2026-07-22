@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import asdict, dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -44,18 +44,18 @@ class QualityScores:
             total += getattr(self, k) * w
         return round(total, 4)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         d = asdict(self)
         d["overall"] = self.overall()
         return d
 
 
-def _hit(text: str, patterns: List[str]) -> float:
+def _hit(text: str, patterns: list[str]) -> float:
     t = text.lower()
     return 1.0 if any(p in t for p in patterns) else 0.0
 
 
-def _count_hits(text: str, patterns: List[str]) -> int:
+def _count_hits(text: str, patterns: list[str]) -> int:
     t = text.lower()
     return sum(1 for p in patterns if p in t)
 
@@ -63,7 +63,7 @@ def _count_hits(text: str, patterns: List[str]) -> int:
 def score_document(
     text: str,
     domain: str = "hybrid",
-    keywords: Optional[List[str]] = None,
+    keywords: list[str] | None = None,
 ) -> QualityScores:
     """Score a free-text answer for Toulmin completeness + packaging quality."""
     keywords = keywords or []

@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from epistemic_forge.benchmark.baseline import baseline_answer
 from epistemic_forge.benchmark.metrics import score_document, toulmin_coverage
@@ -18,10 +18,10 @@ class BenchCase:
     title: str
     question: str
     domain: str
-    keywords: List[str]
+    keywords: list[str]
 
 
-BENCHMARK_CASES: List[BenchCase] = [
+BENCHMARK_CASES: list[BenchCase] = [
     BenchCase(
         "p1",
         "Predictive processing and blame",
@@ -106,8 +106,8 @@ class CaseResult:
     forge_toulmin: float
     lift_overall: float
     lift_toulmin: float
-    baseline_scores: Dict[str, Any]
-    forge_scores: Dict[str, Any]
+    baseline_scores: dict[str, Any]
+    forge_scores: dict[str, Any]
 
 
 def _forge_text(case: BenchCase) -> str:
@@ -125,9 +125,9 @@ def _forge_text(case: BenchCase) -> str:
     return "\n\n".join(a.content for a in result.artifacts)
 
 
-def run_benchmark(cases: Optional[List[BenchCase]] = None) -> Dict[str, Any]:
+def run_benchmark(cases: list[BenchCase] | None = None) -> dict[str, Any]:
     cases = cases or BENCHMARK_CASES
-    rows: List[CaseResult] = []
+    rows: list[CaseResult] = []
     for case in cases:
         base_txt = baseline_answer(
             case.title, case.question, case.domain, case.keywords
@@ -187,7 +187,7 @@ def run_benchmark(cases: Optional[List[BenchCase]] = None) -> Dict[str, Any]:
     }
 
 
-def write_benchmark_reports(out_dir: str | Path) -> Dict[str, Any]:
+def write_benchmark_reports(out_dir: str | Path) -> dict[str, Any]:
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     report = run_benchmark()

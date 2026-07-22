@@ -14,3 +14,8 @@ runs/
 forge_output/
 .DS_Store
 *.ipynb_checkpoints/
+
+# coverage artifacts
+.coverage
+coverage.xml
+htmlcov/

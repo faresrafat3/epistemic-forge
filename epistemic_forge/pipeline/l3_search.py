@@ -1,20 +1,22 @@
 """L3 — Tree Search (True LLM-Based Tree of Thoughts / LATS escalation)."""
 
+import uuid
+from typing import Any
+
+from loguru import logger
+
+from epistemic_forge.llm import generate_structured
+from epistemic_forge.memory.economy import budget_manager
 from epistemic_forge.models import (
     ProjectSpec,
-    SearchResult,
     SearchNode,
-    ThoughtProposalsOutput,
+    SearchResult,
     ThoughtEvaluation,
+    ThoughtProposalsOutput,
 )
-from epistemic_forge.llm import generate_structured
-from loguru import logger
-from epistemic_forge.memory.economy import budget_manager
-from typing import Dict, Any, List
-import uuid
 
 
-def _generate_thoughts(spec: ProjectSpec, context: str, beam: int) -> List[str]:
+def _generate_thoughts(spec: ProjectSpec, context: str, beam: int) -> list[str]:
     messages = [
         {
             "role": "system",
@@ -60,12 +62,12 @@ def _evaluate_thought(spec: ProjectSpec, thought: str) -> float:
 
 
 def explore(
-    spec: ProjectSpec, bundle: Dict[str, Any], beam: int = 3, steps: int = 2
+    spec: ProjectSpec, bundle: dict[str, Any], beam: int = 3, steps: int = 2
 ) -> SearchResult:
     logger.info(
         f"L3 Search: Initiating genuine LLM Tree Search (Beam={beam}, Steps={steps})..."
     )
-    nodes: List[SearchNode] = []
+    nodes: list[SearchNode] = []
     current_context = f"Initial constraints for {spec.domain}."
     best_thought_overall = ""
     highest_score = -1.0
@@ -118,12 +120,12 @@ def explore(
 
 
 def tot_search(
-    spec: ProjectSpec, bundle: Dict[str, Any], beam: int = 3, steps: int = 2
+    spec: ProjectSpec, bundle: dict[str, Any], beam: int = 3, steps: int = 2
 ) -> SearchResult:
     return explore(spec, bundle, beam, steps)
 
 
 def lats_search(
-    spec: ProjectSpec, bundle: Dict[str, Any], rollouts: int = 3
+    spec: ProjectSpec, bundle: dict[str, Any], rollouts: int = 3
 ) -> SearchResult:
     return explore(spec, bundle, beam=rollouts, steps=2)
