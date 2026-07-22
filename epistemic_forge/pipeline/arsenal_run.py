@@ -25,9 +25,44 @@ class ArsenalRun:
 
     def run(self, spec: ProjectSpec) -> ForgeResult:
         logger.info(f"Starting ArsenalRun for: {spec.title}")
-        from epistemic_forge.models import (
-            RouteDecision,
-        )  # Local import to guarantee it works
+        from epistemic_forge.models import RouteDecision
+        
+        # L0: Semantic Router
+        route = route_project(spec)
+        logger.info(f"Pipeline dynamically configured: {route.rationale}")
+        
+        # L1: OPRO Optimizer
+        instruction = optimize_instruction(spec)
+        
+        # L2: Conductor & Experts
+        conducted = conduct(spec, {'instruction': instruction, 'skills': []})
+        
+        # L3: Tree Search with PRM (Only if activated by L0)
+        search_nodes = []
+        best_thought = str(conducted)
+        final_score = 0.5
+        
+        if route.activate.get("l3_search", True):
+            search = explore(spec, conducted, beam=3, steps=2)
+            search_nodes = search.nodes
+            best_thought = search.best_thought
+            final_score = search.score
+        
+        # L6: Stage Artifacts and Review (incorporates L4 Self-Refine internally)
+        artifacts, review, score = produce_artifacts(spec, best_thought, conducted, final_score)
+        
+        return ForgeResult(
+            spec=spec,
+            route=route,
+            instruction=instruction,
+            claims=[],
+            search_trace=search_nodes,
+            reflections=self.reflexion.all(),
+            skills_used=[],
+            artifacts=artifacts,
+            peer_review=review,
+            final_score=score
+        )
 
         instruction = optimize_instruction(spec)
         conducted = conduct(spec, {"instruction": instruction, "skills": []})
