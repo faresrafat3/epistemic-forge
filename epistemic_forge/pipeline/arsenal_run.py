@@ -23,7 +23,7 @@ class ArsenalRun:
     def create(cls) -> "ArsenalRun":
         return cls(skills=SkillLibrary(), reflexion=ReflexionStore(window=3))
 
-    def run(self, spec: ProjectSpec) -> ForgeResult:
+    def run(self, spec: ProjectSpec, out_dir: Optional[str] = None) -> ForgeResult:
         logger.info(f"Starting ArsenalRun for: {spec.title}")
         from epistemic_forge.models import RouteDecision
         
@@ -55,7 +55,7 @@ class ArsenalRun:
             spec=spec,
             route=route,
             instruction=instruction,
-            claims=[],
+            claims=conducted.get('ClaimLatticeExpert', {}).get('claims', []),
             search_trace=search_nodes,
             reflections=self.reflexion.all(),
             skills_used=[],
@@ -75,7 +75,7 @@ class ArsenalRun:
             spec=spec,
             route=RouteDecision(families=["mock"], activate={}, rationale="mock"),
             instruction=instruction,
-            claims=[],
+            claims=conducted.get('ClaimLatticeExpert', {}).get('claims', []),
             search_trace=search.nodes,
             reflections=self.reflexion.all(),
             skills_used=[],

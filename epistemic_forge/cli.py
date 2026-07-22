@@ -125,6 +125,12 @@ def main():
 
         if hasattr(result, "claims"):
             display_claim_lattice(result.claims)
+        
+        # SOTA EXPORT
+        from epistemic_forge.io.export import export_result
+        export_dir = f'runs/{spec.title.replace(" ", "_").lower()}'
+        export_result(result, export_dir)
+
         else:
             console.print(
                 "[yellow]Notice: No claims extracted in the final result.[/yellow]"
