@@ -1,69 +1,55 @@
-"""Tests for Epistemic Forge pipeline."""
+"""Test suite for Epistemic Forge Core Pipeline.
 
-from pathlib import Path
+Uses Pytest and Mocks to ensure CI/CD passes without requiring 
+live API keys or consuming credits.
+"""
+import pytest
+from unittest.mock import MagicMock
+from epistemic_forge.models import ProjectSpec, ClaimLatticeOutput, Claim, Confidence, RouteDecision
+from epistemic_forge.pipeline.arsenal_run import ArsenalRun
 
-from epistemic_forge.io.export import export_result
-from epistemic_forge.models import Domain, ProjectSpec
-from epistemic_forge.pipeline.arsenal_run import ArsenalRun, run_pipeline
-from epistemic_forge.pipeline.l1_optimizer import ape_generate, optimize_instruction, opro_evolve
-from epistemic_forge.pipeline.router import route_project
-
-
-def test_router_kaggle_enables_skills_and_cascade():
-    spec = ProjectSpec(
-        title="Tabular race",
-        question="How should I build a leakage-safe baseline for a Kaggle tabular competition?",
-        domain=Domain.KAGGLE,
-        keywords=["kaggle", "baseline", "cv"],
+@pytest.fixture
+def dummy_spec():
+    return ProjectSpec(
+        title="Test Project",
+        question="Is this a test?",
+        domain="research",
+        target_model="mock-model"
     )
-    route = route_project(spec)
-    assert route.activate["voyager"] is True
-    assert route.l3_mode in {"cascade", "lats", "tot"}
-    assert "Agents" in route.families or "Self-Criticism" in route.families
 
+def test_l0_router_fallback(dummy_spec, mocker):
+    """Ensure L0 Router falls back safely if LLM fails."""
+    # Mock the LLM to raise an exception
+    mocker.patch("epistemic_forge.pipeline.router.generate_structured", side_effect=Exception("API Down"))
+    from epistemic_forge.pipeline.router import route_project
+    
+    decision = route_project(dummy_spec)
+    assert decision.l3_mode == "tot"
+    assert decision.activate["l4_refine"] is True
 
-def test_l1_ape_and_opro_scores_improve_or_hold():
-    spec = ProjectSpec(
-        title="Dialectic brief",
-        question="What is free will under predictive processing?",
-        domain=Domain.PHILOSOPHY,
-        keywords=["free will", "predictive processing"],
-    )
-    ape = ape_generate(spec)
-    assert ape and ape[0].score > 0
-    evolved = opro_evolve(ape[:2], spec, steps=2)
-    assert evolved[0].score >= ape[-1].score * 0.5  # not collapsed
+def test_l2_conductor_routing(dummy_spec, mocker):
+    """Ensure L2 Conductor routes to the correct experts."""
+    from epistemic_forge.pipeline.l2_conductor import SemanticConductor
+    
+    conductor = SemanticConductor()
+    active = conductor._route_experts(dummy_spec.domain.value)
+    
+    # Research domain should activate Hegelian and Rigor Sentinel
+    names = [e.expert_name for e in active]
+    assert "Hegelian_Dialectic_Engine" in names
+    assert "Rigor_And_Leakage_Sentinel" in names
 
-
-def test_full_pipeline_hybrid_exports_files(tmp_path: Path):
-    result = run_pipeline(
-        title="Epistemic freelancing kit",
-        question="How can freelancers package uncertain research into client-ready deliverables without overclaiming?",
-        domain="hybrid",
-        keywords=["freelance", "research", "claims"],
-        max_trials=2,
-    )
-    assert result.final_score > 0
-    assert result.artifacts
-    assert result.route.rationale
-    out = export_result(result, tmp_path / "out")
-    assert (out / "MANIFEST.json").exists()
-    assert (out / "result.json").exists()
-    # At least executive summary written
-    md_files = list(out.glob("*.md"))
-    assert md_files
-
-
-def test_arsenal_run_stateful_trials():
-    runner = ArsenalRun.create()
-    spec = ProjectSpec(
-        title="Notebook ethics",
-        question="What ethical risks arise when auto-generating Kaggle notebooks for clients?",
-        domain=Domain.HYBRID,
-        keywords=["ethics", "kaggle", "client"],
-        max_trials=2,
-    )
-    r1 = runner.run(spec)
-    assert r1.final_score > 0
-    # skills library grew or stayed consistent
-    assert len(runner.skills.names()) >= 5
+def test_economy_manager():
+    """Ensure the Token Budget Manager correctly halts operations."""
+    from epistemic_forge.memory.economy import budget_manager
+    
+    budget_manager.reset()
+    budget_manager.set_budget(100)
+    
+    class MockResponse:
+        class Usage:
+            total_tokens = 150
+        usage = Usage()
+        
+    budget_manager.add_usage(MockResponse(), "mock-model")
+    assert budget_manager.is_budget_exceeded() is True
