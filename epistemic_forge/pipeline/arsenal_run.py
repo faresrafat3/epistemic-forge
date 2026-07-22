@@ -2,23 +2,14 @@ from __future__ import annotations
 from loguru import logger
 from dataclasses import dataclass
 from typing import List, Optional
+
 from epistemic_forge.memory.reflexion_store import ReflexionStore
 from epistemic_forge.memory.skill_library import SkillLibrary
-from epistemic_forge.models import (
+from epistemic_forge.models import Domain, ForgeResult, ProjectSpec
 from epistemic_forge.pipeline.l1_optimizer import optimize_instruction
 from epistemic_forge.pipeline.l2_conductor import conduct
 from epistemic_forge.pipeline.l3_search import explore
 from epistemic_forge.pipeline.l6_stages import produce_artifacts
-
-
-"""Full ARSENAL-inspired pipeline orchestration for Epistemic Forge."""
-
-
-
-    Domain,
-    ForgeResult,
-    ProjectSpec,
-)
 
 
 @dataclass
