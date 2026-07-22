@@ -31,4 +31,9 @@ clean:
 
 cli:
 	@echo "Running CLI test query..."
-	epistemic-forge --query "Is RAG strictly better than Long-Context LLMs?"
+	epistemic-forge --title "RAG vs Long-Context" --question "Is RAG strictly better than Long-Context LLMs?"
+
+ui:
+	@echo "Launching Streamlit dashboard (requires the 'ui' extra)..."
+	pip install -e ".[ui]"
+	streamlit run epistemic_forge/ui/app.py

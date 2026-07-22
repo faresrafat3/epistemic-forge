@@ -2,33 +2,88 @@
 
 Absolute flexibility: Use ANY model from ANY provider with zero code changes.
 Supports standard formats: 'openai/gpt-4o', 'anthropic/claude-3-sonnet', 'ollama/llama3', 'azure/...', etc.
+
+Security notes
+--------------
+* API keys are passed **per call** via ``call_params["api_key"]`` and are never
+  written into ``os.environ`` (which would leak them to all child processes).
+* User-supplied prompts are validated (non-empty, bounded size) before dispatch
+  to prevent runaway token usage / injection of malformed payloads.
 """
 
-from pydantic import BaseModel
-from loguru import logger
-from tenacity import retry, stop_after_attempt, wait_exponential
-import instructor
-from litellm import completion
-from epistemic_forge.memory.economy import budget_manager
+from __future__ import annotations
+
 import os
+from typing import Any, TypeVar
+
+import instructor
+from litellm import acompletion, completion
+from loguru import logger
+from pydantic import BaseModel
+from tenacity import retry, stop_after_attempt, wait_exponential
+
+from epistemic_forge.errors import InvalidInputError, LLMDispatchError
+from epistemic_forge.memory.economy import budget_manager
+
+T = TypeVar("T", bound=BaseModel)
+
+# Upper bound on total prompt characters to protect against accidental
+# token blow-up / abusive inputs. ~50k chars is generous for our use case.
+MAX_PROMPT_CHARS = int(os.getenv("EF_MAX_PROMPT_CHARS", "50000"))
 
 # We patch instructor to use LiteLLM's universal completion directly!
 # This is the "Hermes" way: we don't switch clients, we use one universal proxy.
+client: Any = None
 try:
     client = instructor.from_litellm(completion)
-except Exception as e:
+except Exception as e:  # pragma: no cover - depends on install
     logger.warning(f"LiteLLM/Instructor initialization failed: {e}")
-    client = None
+
+aclient: Any = None
+try:
+    aclient = instructor.from_litellm(acompletion)
+except Exception as e:  # pragma: no cover - depends on install
+    logger.warning(f"Async LiteLLM/Instructor initialization failed: {e}")
 
 
-def _offline_fallback(response_model: type[BaseModel], messages: list) -> BaseModel:
+def validate_messages(messages: list[dict]) -> None:
+    """Validate prompt structure before dispatch.
+
+    Raises :class:`InvalidInputError` on empty or oversized prompts. This is a
+    defense-in-depth measure: it bounds cost and rejects malformed payloads.
+    """
+    if not messages:
+        raise InvalidInputError("Cannot dispatch an empty message list.")
+    total = 0
+    for i, msg in enumerate(messages):
+        if not isinstance(msg, dict):
+            raise InvalidInputError(f"Message #{i} is not a mapping.")
+        if "role" not in msg:
+            raise InvalidInputError(f"Message #{i} is missing 'role'.")
+        content = msg.get("content")
+        if content is None:
+            continue
+        if not isinstance(content, str):
+            raise InvalidInputError(f"Message #{i} content must be a string.")
+        total += len(content)
+    if total > MAX_PROMPT_CHARS:
+        raise InvalidInputError(
+            f"Prompt too large ({total} chars > limit {MAX_PROMPT_CHARS})."
+        )
+
+
+def _offline_fallback(response_model: type[T], messages: list) -> T:
     """Deterministic fallback for CI/offline runs without provider credentials."""
-    prompt = ""
-    if messages:
-        prompt = str(messages[-1].get("content", ""))
-    lower = prompt.lower()
     model_name = response_model.__name__
 
+    if model_name == "RouteDecision":
+        return response_model(
+            families=["mock"],
+            activate={"l3_search": True, "l4_refine": True, "l6_stages": True},
+            l1_mode="opro",
+            l3_mode="tot",
+            rationale="Offline deterministic routing (all heavy layers on).",
+        )
     if model_name == "OptimizedInstruction":
         return response_model(
             meta_prompt=(
@@ -142,7 +197,31 @@ def _offline_fallback(response_model: type[BaseModel], messages: list) -> BaseMo
             robust_baseline="Simple regularized model with strict CV and leakage audit.",
         )
 
-    return response_model()
+    # Generic fallback: fill required fields with safe placeholders so the
+    # offline path never raises ValidationError (e.g. for ADAS-built models).
+    try:
+        data: dict = {}
+        for name, fld in response_model.model_fields.items():
+            if not fld.is_required():
+                continue
+            ann = fld.annotation
+            if ann is str or (isinstance(ann, type) and issubclass(ann, str)):
+                data[name] = f"[offline] {name}"
+            elif ann is float:
+                data[name] = 0.5
+            elif ann is int:
+                data[name] = 0
+            elif ann is bool:
+                data[name] = False
+            elif ann in (list, dict) or getattr(ann, "__origin__", None) in (list, dict):
+                data[name] = [] if ann in (list, list) or getattr(
+                    ann, "__origin__", None
+                ) is list else {}
+            else:
+                data[name] = ""
+        return response_model(**data)
+    except Exception:
+        return response_model()
 
 
 def _missing_credentials(model: str, api_key: str | None) -> bool:
@@ -161,50 +240,46 @@ def _missing_credentials(model: str, api_key: str | None) -> bool:
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10))
 def generate_structured(
     messages: list,
-    response_model: type[BaseModel],
+    response_model: type[T],
     model: str = "gpt-4o-mini",  # Can be ANY litellm supported string, e.g., 'ollama/llama3'
     temperature: float = 0.0,
     seed: int = 42,
-    api_base: str = None,
-    api_key: str = None,
+    api_base: str | None = None,
+    api_key: str | None = None,
     **kwargs,
-) -> BaseModel:
+) -> T:
     """
     Universal Hermes-style Structured Extraction.
     You can pass the provider in the model string (e.g., 'anthropic/claude-3-opus-20240229').
     """
+    validate_messages(messages)
+
     if _missing_credentials(model, api_key):
         logger.warning(
             f"🌐 [Hermes Router] Missing credentials for [{model}], using deterministic fallback."
         )
         return _offline_fallback(response_model, messages)
 
-    if not client:
-        raise ValueError("Universal LLM Router is not initialized.")
+    if client is None:
+        raise LLMDispatchError("Universal LLM Router is not initialized.")
 
     try:
         logger.debug(
             f"🌐 [Hermes Router] Dispatching to [{model}] for schema [{response_model.__name__}]..."
         )
 
-        call_params = {
+        call_params: dict[str, Any] = {
             "model": model,
             "messages": messages,
             "response_model": response_model,
             "temperature": temperature,
         }
 
-        # Inject optional routing Overrides
+        # Inject optional routing Overrides (api_key is passed per-call only;
+        # we deliberately do NOT write it into os.environ).
         if api_base:
             call_params["api_base"] = api_base
         if api_key:
-            # Force it into environment for litellm
-            if "openrouter" in model:
-                os.environ["OPENROUTER_API_KEY"] = api_key
-            elif "gemini" in model:
-                os.environ["GEMINI_API_KEY"] = api_key
-            else:
-                os.environ["OPENAI_API_KEY"] = api_key
             call_params["api_key"] = api_key
 
         # Add any extra kwargs (like top_p, max_tokens) dynamically
@@ -219,7 +294,52 @@ def generate_structured(
         return response
 
     except Exception as e:
-        logger.error(
-            f"🌐 [Hermes Router] Critical Failure for model '{model}': {str(e)}"
-        )
+        logger.error(f"🌐 [Hermes Router] Critical Failure for model '{model}': {e}")
+        raise
+
+
+@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10))
+async def agenerate_structured(
+    messages: list,
+    response_model: type[T],
+    model: str = "gpt-4o-mini",
+    temperature: float = 0.0,
+    seed: int = 42,
+    api_base: str | None = None,
+    api_key: str | None = None,
+    **kwargs,
+) -> T:
+    """Async twin of :func:`generate_structured` using ``litellm.acompletion``.
+
+    Used by the parallel expert conductor so multiple experts can dispatch LLM
+    calls concurrently instead of sequentially.
+    """
+    validate_messages(messages)
+
+    if _missing_credentials(model, api_key):
+        return _offline_fallback(response_model, messages)
+
+    if aclient is None:
+        raise LLMDispatchError("Async Universal LLM Router is not initialized.")
+
+    try:
+        call_params: dict[str, Any] = {
+            "model": model,
+            "messages": messages,
+            "response_model": response_model,
+            "temperature": temperature,
+        }
+        if api_base:
+            call_params["api_base"] = api_base
+        if api_key:
+            call_params["api_key"] = api_key
+        call_params.update(kwargs)
+        if "gpt" in model or "llama" in model:
+            call_params["seed"] = seed
+
+        response = await aclient.chat.completions.create(**call_params)
+        budget_manager.add_usage(response._raw_response, model)
+        return response
+    except Exception as e:
+        logger.error(f"🌐 [Hermes Router] Async failure for model '{model}': {e}")
         raise

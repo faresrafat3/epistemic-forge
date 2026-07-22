@@ -5,9 +5,12 @@ Every expert MUST implement this interface to guarantee uniform execution
 and predictable structured outputs within the L2 Conductor.
 """
 
+import asyncio
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+from typing import Any
+
 from pydantic import BaseModel
+
 from epistemic_forge.models import ProjectSpec
 
 
@@ -21,7 +24,7 @@ class EpistemicExpert(ABC):
         pass
 
     @abstractmethod
-    def analyze(self, spec: ProjectSpec, context: Dict[str, Any]) -> BaseModel:
+    def analyze(self, spec: ProjectSpec, context: dict[str, Any]) -> BaseModel:
         """
         Executes the expert's specific neuro-symbolic logic.
 
@@ -33,3 +36,12 @@ class EpistemicExpert(ABC):
             A strictly typed Pydantic BaseModel representing the expert's conclusion.
         """
         pass
+
+    async def analyze_async(self, spec: ProjectSpec, context: dict[str, Any]) -> BaseModel:
+        """Async counterpart used by the parallel conductor.
+
+        The default implementation runs the sync ``analyze`` in a worker thread
+        so experts that do network I/O (LLM calls) can execute concurrently.
+        Experts that perform native async LLM calls should override this.
+        """
+        return await asyncio.to_thread(self.analyze, spec, context)

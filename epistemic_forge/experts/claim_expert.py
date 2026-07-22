@@ -1,11 +1,13 @@
 """Claim Lattice Expert Implementation (Grounded with Real-World Search)."""
 
-from typing import Dict, Any
-from epistemic_forge.experts.base import EpistemicExpert
-from epistemic_forge.models import ProjectSpec, ClaimLatticeOutput
-from epistemic_forge.llm import generate_structured
-from epistemic_forge.tools.search import search_web
+from typing import Any
+
 from loguru import logger
+
+from epistemic_forge.experts.base import EpistemicExpert
+from epistemic_forge.llm import generate_structured
+from epistemic_forge.models import ClaimLatticeOutput, ProjectSpec
+from epistemic_forge.tools.search import search_web
 
 
 class ClaimLatticeExpert(EpistemicExpert):
@@ -15,7 +17,7 @@ class ClaimLatticeExpert(EpistemicExpert):
     def expert_name(self) -> str:
         return "Grounded_Claim_Lattice_Generator"
 
-    def analyze(self, spec: ProjectSpec, context: Dict[str, Any]) -> ClaimLatticeOutput:
+    def analyze(self, spec: ProjectSpec, context: dict[str, Any]) -> ClaimLatticeOutput:
         """Uses Live Web Search to ground the LLM's claims in reality."""
 
         # 1. Fetch real-world context before asking the LLM to build claims

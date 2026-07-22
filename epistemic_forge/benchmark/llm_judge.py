@@ -1,7 +1,9 @@
 """LLM-as-a-Judge for Automated, Scientific Epistemic Evaluation (G-Eval style)."""
 
+from typing import Any
+
 from pydantic import BaseModel, Field
-from typing import Dict, Any
+
 from epistemic_forge.llm import generate_structured
 
 
@@ -21,7 +23,7 @@ class JudgeEvaluation(BaseModel):
     )
 
 
-def evaluate_artifact_quality(question: str, artifact_text: str) -> Dict[str, Any]:
+def evaluate_artifact_quality(question: str, artifact_text: str) -> dict[str, Any]:
     """Uses a stronger model (e.g., GPT-4o) to judge the output of the cheaper pipeline."""
     messages = [
         {

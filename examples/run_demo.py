@@ -7,27 +7,27 @@ from epistemic_forge.io.export import export_result
 from epistemic_forge.pipeline.arsenal_run import run_pipeline
 
 DEMOS = [
-    dict(
-        title="Predictive minds and blame",
-        question="If the brain is a prediction machine, what happens to moral responsibility?",
-        domain="philosophy",
-        keywords=["predictive processing", "responsibility"],
-        out="runs/demo_philosophy",
-    ),
-    dict(
-        title="Imbalanced tabular baseline",
-        question="What is an honest baseline plan for a noisy imbalanced Kaggle table?",
-        domain="kaggle",
-        keywords=["imbalance", "baseline", "cv", "leakage"],
-        out="runs/demo_kaggle",
-    ),
-    dict(
-        title="Climate-tech research sprint",
-        question="How do I scope a 2-week research sprint for a climate-tech founder?",
-        domain="freelance",
-        keywords=["sprint", "scope", "founder"],
-        out="runs/demo_freelance",
-    ),
+    {
+        "title": "Predictive minds and blame",
+        "question": "If the brain is a prediction machine, what happens to moral responsibility?",
+        "domain": "philosophy",
+        "keywords": ["predictive processing", "responsibility"],
+        "out": "runs/demo_philosophy",
+    },
+    {
+        "title": "Imbalanced tabular baseline",
+        "question": "What is an honest baseline plan for a noisy imbalanced Kaggle table?",
+        "domain": "kaggle",
+        "keywords": ["imbalance", "baseline", "cv", "leakage"],
+        "out": "runs/demo_kaggle",
+    },
+    {
+        "title": "Climate-tech research sprint",
+        "question": "How do I scope a 2-week research sprint for a climate-tech founder?",
+        "domain": "freelance",
+        "keywords": ["sprint", "scope", "founder"],
+        "out": "runs/demo_freelance",
+    },
 ]
 
 

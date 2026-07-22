@@ -1,11 +1,11 @@
 """L1 — Instruction Optimizer (APE + OPRO fallback friendly)."""
 
 from dataclasses import dataclass
-from typing import List
+
+from loguru import logger
 
 from epistemic_forge.llm import generate_structured
 from epistemic_forge.models import OptimizedInstruction, ProjectSpec
-from loguru import logger
 
 
 @dataclass
@@ -47,7 +47,7 @@ def _score_instruction(
     return round(max(0.01, min(score, 0.99)), 4)
 
 
-def ape_generate(spec: ProjectSpec) -> List[InstructionCandidate]:
+def ape_generate(spec: ProjectSpec) -> list[InstructionCandidate]:
     """Generate deterministic APE-style instruction seeds with heuristic scoring."""
     seeds = _seed_instructions(spec)
     ranked = [
@@ -59,8 +59,8 @@ def ape_generate(spec: ProjectSpec) -> List[InstructionCandidate]:
 
 
 def opro_evolve(
-    candidates: List[InstructionCandidate], spec: ProjectSpec, steps: int = 2
-) -> List[InstructionCandidate]:
+    candidates: list[InstructionCandidate], spec: ProjectSpec, steps: int = 2
+) -> list[InstructionCandidate]:
     """Deterministically evolve instructions OPRO-style while preserving stability."""
     pool = list(candidates) if candidates else ape_generate(spec)
     for step in range(max(1, steps)):

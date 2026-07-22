@@ -1,15 +1,20 @@
 from __future__ import annotations
-from loguru import logger
-from dataclasses import dataclass
-from typing import List, Optional
 
+import asyncio
+from dataclasses import dataclass
+
+from loguru import logger
+
+from epistemic_forge.errors import PipelineError
 from epistemic_forge.memory.reflexion_store import ReflexionStore
 from epistemic_forge.memory.skill_library import SkillLibrary
-from epistemic_forge.models import Domain, ForgeResult, ProjectSpec
+from epistemic_forge.models import Domain, ForgeResult, ProjectSpec, RouteDecision
 from epistemic_forge.pipeline.l1_optimizer import optimize_instruction
-from epistemic_forge.pipeline.l2_conductor import conduct
+from epistemic_forge.pipeline.l2_conductor import conduct_async
 from epistemic_forge.pipeline.l3_search import explore
 from epistemic_forge.pipeline.l6_stages import produce_artifacts
+from epistemic_forge.pipeline.machine import PipelineContext, execute_pipeline
+from epistemic_forge.pipeline.router import route_project
 
 
 @dataclass
@@ -20,68 +25,79 @@ class ArsenalRun:
     reflexion: ReflexionStore
 
     @classmethod
-    def create(cls) -> "ArsenalRun":
+    def create(cls) -> ArsenalRun:
         return cls(skills=SkillLibrary(), reflexion=ReflexionStore(window=3))
 
-    def run(self, spec: ProjectSpec, out_dir: Optional[str] = None) -> ForgeResult:
+    def run(self, spec: ProjectSpec, out_dir: str | None = None) -> ForgeResult:
         logger.info(f"Starting ArsenalRun for: {spec.title}")
-        from epistemic_forge.models import RouteDecision
-        
-        # L0: Semantic Router
-        route = route_project(spec)
-        logger.info(f"Pipeline dynamically configured: {route.rationale}")
-        
-        # L1: OPRO Optimizer
-        instruction = optimize_instruction(spec)
-        
-        # L2: Conductor & Experts
-        conducted = conduct(spec, {'instruction': instruction, 'skills': []})
-        
-        # L3: Tree Search with PRM (Only if activated by L0)
-        search_nodes = []
-        best_thought = str(conducted)
-        final_score = 0.5
-        
-        if route.activate.get("l3_search", True):
-            search = explore(spec, conducted, beam=3, steps=2)
-            search_nodes = search.nodes
-            best_thought = search.best_thought
-            final_score = search.score
-        
-        # L6: Stage Artifacts and Review (incorporates L4 Self-Refine internally)
-        artifacts, review, score = produce_artifacts(spec, best_thought, conducted, final_score)
-        
+        ctx = PipelineContext(spec=spec)
+        try:
+            ctx = execute_pipeline(ctx)
+        except PipelineError:
+            raise
+        except Exception as exc:
+            raise PipelineError(
+                f"Pipeline failed for '{spec.title}': {exc}", stage="run"
+            ) from exc
+
+        route = ctx.route or RouteDecision(
+            families=["mock"], activate={}, rationale="mock"
+        )
         return ForgeResult(
             spec=spec,
             route=route,
-            instruction=instruction,
-            claims=conducted.get('ClaimLatticeExpert', {}).get('claims', []),
-            search_trace=search_nodes,
+            instruction=ctx.instruction,
+            claims=ctx.conducted.get("Grounded_Claim_Lattice_Generator", {}).get(
+                "claims", []
+            ),
+            search_trace=list(ctx.search_result.nodes) if ctx.search_result else [],
             reflections=self.reflexion.all(),
             skills_used=[],
-            artifacts=artifacts,
-            peer_review=review,
-            final_score=score
+            artifacts=ctx.artifacts,
+            peer_review=ctx.review or {},
+            final_score=ctx.final_score,
         )
 
-        instruction = optimize_instruction(spec)
-        conducted = conduct(spec, {"instruction": instruction, "skills": []})
-        search = explore(spec, conducted, beam=3, steps=2)
-        artifacts, review, score = produce_artifacts(
-            spec, search.best_thought, conducted, search.score
-        )
+
+    async def arun(self, spec: ProjectSpec) -> ForgeResult:
+        """Async variant: runs L2 experts concurrently via asyncio.gather."""
+        logger.info(f"Starting async ArsenalRun for: {spec.title}")
+        ctx = PipelineContext(spec=spec)
+        try:
+            ctx.route = await asyncio.to_thread(route_project, spec)
+            ctx.instruction = await asyncio.to_thread(optimize_instruction, spec)
+            ctx.conducted = await conduct_async(
+                spec, {"instruction": ctx.instruction, "skills": []}
+            )
+            if ctx.route.activate.get("l3_search", True):
+                ctx.search_result = await asyncio.to_thread(
+                    explore, spec, ctx.conducted, 3, 2
+                )
+
+            best = ctx.search_result.best_thought if ctx.search_result else str(ctx.conducted)
+            prior = ctx.search_result.score if ctx.search_result else 0.5
+            artifacts, review, score = await asyncio.to_thread(
+                produce_artifacts, spec, best, ctx.conducted, prior
+            )
+            ctx.artifacts, ctx.review, ctx.final_score = artifacts, review, score
+        except Exception as exc:
+            raise PipelineError(
+                f"Async pipeline failed for '{spec.title}': {exc}", stage="arun"
+            ) from exc
 
         return ForgeResult(
             spec=spec,
-            route=RouteDecision(families=["mock"], activate={}, rationale="mock"),
-            instruction=instruction,
-            claims=conducted.get('ClaimLatticeExpert', {}).get('claims', []),
-            search_trace=search.nodes,
+            route=ctx.route,
+            instruction=ctx.instruction,
+            claims=ctx.conducted.get("Grounded_Claim_Lattice_Generator", {}).get(
+                "claims", []
+            ),
+            search_trace=list(ctx.search_result.nodes) if ctx.search_result else [],
             reflections=self.reflexion.all(),
             skills_used=[],
-            artifacts=artifacts,
-            peer_review=review,
-            final_score=score,
+            artifacts=ctx.artifacts,
+            peer_review=ctx.review or {},
+            final_score=ctx.final_score,
         )
 
 
@@ -90,11 +106,18 @@ def run_pipeline(
     question: str,
     domain: str = "hybrid",
     audience: str = "technical peer / client",
-    keywords: Optional[List[str]] = None,
-    constraints: Optional[List[str]] = None,
+    keywords: list[str] | None = None,
+    constraints: list[str] | None = None,
     max_trials: int = 3,
+    target_model: str = "gpt-4o-mini",
+    api_base: str | None = None,
+    async_run: bool = False,
 ) -> ForgeResult:
-    """Convenience API."""
+    """Convenience API for library and CLI users.
+
+    Library code must not call ``sys.exit``; on failure we raise a typed
+    :class:`PipelineError` so callers decide how to surface it.
+    """
     try:
         dom = Domain(domain)
     except ValueError:
@@ -107,12 +130,17 @@ def run_pipeline(
         keywords=keywords or [],
         constraints=constraints or [],
         max_trials=max_trials,
+        target_model=target_model,
+        api_base=api_base,
     )
+    logger.info(f"Starting Epistemic Forge Pipeline for: '{title}'")
+    runner = ArsenalRun.create()
     try:
-        logger.info(f"Starting Epistemic Forge Pipeline for: '{title}'")
-        result = ArsenalRun.create().run(spec)
-        logger.success("Pipeline execution completed successfully.")
-        return result
-    except Exception as e:
-        logger.exception(f"Critical Pipeline Failure: {str(e)}")
-        raise SystemExit(1)
+        result = asyncio.run(runner.arun(spec)) if async_run else runner.run(spec)
+    except PipelineError:
+        raise
+    except Exception as exc:
+        logger.exception(f"Critical Pipeline Failure: {exc}")
+        raise PipelineError(f"Pipeline failed: {exc}") from exc
+    logger.success("Pipeline execution completed successfully.")
+    return result

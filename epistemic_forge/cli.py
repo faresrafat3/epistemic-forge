@@ -8,14 +8,15 @@ from __future__ import annotations
 
 import argparse
 import sys
+
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.tree import Tree
 
+from epistemic_forge.memory.economy import budget_manager
 from epistemic_forge.models import ProjectSpec
 from epistemic_forge.pipeline.arsenal_run import run_pipeline
-from epistemic_forge.memory.economy import budget_manager
 
 console = Console()
 
@@ -107,12 +108,13 @@ def main():
                 "[cyan]L2 Conductor is dispatching semantic experts...", total=None
             )
 
-            # Execute the core pipeline
+            # Execute the core pipeline (Hermes routing overrides are passed through)
             result = run_pipeline(
                 title=spec.title,
                 question=spec.question,
                 domain=spec.domain.value,
-                # Note: To fully support Hermes, pipeline/arsenal_run.py must pass target_model down.
+                target_model=args.model,
+                api_base=args.api_base,
             )
 
             progress.update(
@@ -123,18 +125,19 @@ def main():
         # Render output
         console.print("[bold green]✔ Pipeline Execution Successful.[/bold green]\n")
 
-        if hasattr(result, "claims"):
+        if hasattr(result, "claims") and result.claims:
             display_claim_lattice(result.claims)
-        
-        # SOTA EXPORT
-        from epistemic_forge.io.export import export_result
-        export_dir = f'runs/{spec.title.replace(" ", "_").lower()}'
-        export_result(result, export_dir)
-
         else:
             console.print(
                 "[yellow]Notice: No claims extracted in the final result.[/yellow]"
             )
+
+        # SOTA EXPORT
+        from epistemic_forge.io.export import export_result
+
+        export_dir = f'runs/{spec.title.replace(" ", "_").lower()}'
+        export_result(result, export_dir)
+
         console.print(f"\n[bold yellow]💰 {budget_manager.get_report()}[/bold yellow]")
 
     except Exception:

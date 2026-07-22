@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from epistemic_forge.models import ProjectSpec
 
 
 def build_client_pack(
-    spec: ProjectSpec, claims_bundle: Dict[str, Any]
-) -> Dict[str, Any]:
+    spec: ProjectSpec, claims_bundle: dict[str, Any]
+) -> dict[str, Any]:
     return {
         "client_brief": {
             "goal": spec.question,
