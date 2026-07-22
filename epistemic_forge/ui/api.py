@@ -3,7 +3,9 @@
 Provides a RESTful Enterprise-Ready API to integrate the Neuro-Symbolic 
 engine into any larger MLOps or business workflow.
 """
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, Request
+from sse_starlette.sse import EventSourceResponse
+import json
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 from epistemic_forge.models import ProjectSpec
@@ -77,3 +79,47 @@ async def generate_claim_lattice(req: ForgeRequest):
 @app.get("/health")
 async def health_check():
     return {"status": "operational", "engine": "neuro-symbolic-v1"}
+
+
+@app.post("/api/v1/forge/stream")
+async def generate_claim_lattice_stream(req: ForgeRequest, request: Request):
+    """Executes the L0-L6 pipeline and streams execution states via SSE."""
+    async def event_generator():
+        spec = ProjectSpec(
+            title=req.title,
+            question=req.question,
+            domain=req.domain,
+            target_model=req.target_model,
+            keywords=req.keywords,
+            api_key=req.api_key,
+            api_base=req.api_base,
+            budget_tokens=req.budget_tokens
+        )
+        
+        try:
+            async for event in run_pipeline(title=spec.title, question=spec.question, domain=spec.domain.value):
+                # If client disconnected
+                if await request.is_disconnected():
+                    break
+                
+                # If we have the final result, format it
+                if event["status"] == "completed":
+                    result = event["result"]
+                    final_memo = next((art.content for art in getattr(result, "artifacts", []) if art.name == "Final Synthesis Memo"), "")
+                    raw_claims = getattr(result, "claims", [])
+                    claims_list = [c.model_dump() if hasattr(c, "model_dump") else c for c in raw_claims]
+                    
+                    final_data = {
+                        "score": getattr(result, "final_score", 0.0),
+                        "claims": claims_list,
+                        "final_memo": final_memo,
+                        "peer_review": getattr(result, "peer_review", {})
+                    }
+                    yield {"event": "completed", "data": json.dumps(final_data)}
+                else:
+                    yield {"event": "update", "data": json.dumps({"status": event["status"], "message": event["message"]})}
+                    
+        except Exception as e:
+            yield {"event": "error", "data": json.dumps({"detail": str(e)})}
+            
+    return EventSourceResponse(event_generator())

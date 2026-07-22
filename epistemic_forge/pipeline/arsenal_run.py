@@ -85,7 +85,7 @@ class ArsenalRun:
         )
 
 
-def run_pipeline(
+async def run_pipeline(
     title: str,
     question: str,
     domain: str = "hybrid",
@@ -110,7 +110,8 @@ def run_pipeline(
     )
     try:
         logger.info(f"Starting Epistemic Forge Pipeline for: '{title}'")
-        result = ArsenalRun.create().run(spec)
+        async for event in ArsenalRun.create().run(spec):
+        yield event
         logger.success("Pipeline execution completed successfully.")
         return result
     except Exception as e:
