@@ -24,8 +24,14 @@ class SemanticConductor:
         self.experts: list[EpistemicExpert] = []
 
     def _route_experts(self, spec) -> list[EpistemicExpert]:
-        """Determines which experts are required based on the domain."""
-        domain = spec.domain.value if hasattr(spec.domain, "value") else spec.domain
+        """Determines which experts are required based on the domain.
+        Accepts either a ProjectSpec or a domain string/enum directly."""
+        if hasattr(spec, "domain"):
+            domain = spec.domain
+        else:
+            domain = spec
+        if hasattr(domain, "value"):
+            domain = domain.value
         active_experts = [ClaimLatticeExpert()]
 
         # 🧬 ADAS: Inject a dynamically generated expert specific to this domain!
