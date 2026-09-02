@@ -4,11 +4,11 @@ Replaces hardcoded lists with a persistent semantic memory store.
 The system learns over time by saving successful cognitive strategies and 
 retrieving them dynamically for future similar inquiries (Voyager-style).
 """
-from typing import List, Optional
-import os
 import chromadb
 from loguru import logger
+
 from epistemic_forge.models import Skill
+
 
 class SkillLibrary:
     """Persistent Vector Memory for Procedural Skills."""
@@ -37,7 +37,7 @@ class SkillLibrary:
         except Exception as e:
             logger.debug(f"Failed to commit skill: {e}")
 
-    def retrieve_relevant_skills(self, query: str, n_results: int = 2) -> List[Skill]:
+    def retrieve_relevant_skills(self, query: str, n_results: int = 2) -> list[Skill]:
         """Performs semantic search to find skills relevant to the current inquiry."""
         try:
             if self.collection.count() == 0:
@@ -62,7 +62,7 @@ class SkillLibrary:
             logger.warning(f"L5 Retrieval failed: {e}")
             return []
 
-    def get_all_skills(self) -> List[Skill]:
+    def get_all_skills(self) -> list[Skill]:
         """Returns all skills (for debugging or exact matching)."""
         try:
             results = self.collection.get()
@@ -76,5 +76,5 @@ class SkillLibrary:
                         tags=meta.get("tags", "").split(",")
                     ))
             return skills
-        except:
+        except Exception:
             return []

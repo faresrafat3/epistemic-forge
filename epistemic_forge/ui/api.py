@@ -3,11 +3,13 @@
 Provides a RESTful Enterprise-Ready API to integrate the Neuro-Symbolic 
 engine into any larger MLOps or business workflow.
 """
-from fastapi import FastAPI, HTTPException, Request
-from sse_starlette.sse import EventSourceResponse
 import json
+from typing import Any
+
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel
-from typing import List, Optional, Dict, Any
+from sse_starlette.sse import EventSourceResponse
+
 from epistemic_forge.models import ProjectSpec
 from epistemic_forge.pipeline.arsenal_run import run_pipeline
 
@@ -22,17 +24,17 @@ class ForgeRequest(BaseModel):
     question: str
     domain: str = "hybrid"
     target_model: str = "openai/gpt-4o-mini"
-    keywords: List[str] = []
-    api_key: Optional[str] = None
-    api_base: Optional[str] = None
+    keywords: list[str] = []
+    api_key: str | None = None
+    api_base: str | None = None
     budget_tokens: int = 15000
 
 class ForgeResponse(BaseModel):
     status: str
     score: float
-    claims: List[Dict[str, Any]]
+    claims: list[dict[str, Any]]
     final_memo: str
-    peer_review: Dict[str, Any]
+    peer_review: dict[str, Any]
 
 @app.post("/api/v1/forge", response_model=ForgeResponse)
 async def generate_claim_lattice(req: ForgeRequest):

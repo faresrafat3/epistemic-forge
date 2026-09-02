@@ -1,10 +1,13 @@
 """LLM-as-a-Judge for Automated, Scientific Epistemic Evaluation (Toulmin Model)."""
-from typing import Dict, Any
-from epistemic_forge.models import JudgeEvaluation
-from epistemic_forge.llm import generate_structured
+from typing import Any
+
 from loguru import logger
 
-def evaluate_artifact_quality(question: str, artifact_text: str) -> Dict[str, Any]:
+from epistemic_forge.llm import generate_structured
+from epistemic_forge.models import JudgeEvaluation
+
+
+def evaluate_artifact_quality(question: str, artifact_text: str) -> dict[str, Any]:
     """Uses a stronger model to judge the output based strictly on Toulmin's Model of Argumentation."""
     logger.info("⚖️ Initiating strict Toulmin-based evaluation of the final artifact...")
     

@@ -54,3 +54,15 @@ epistemic_forge = ["data/samples/*.json", "data/samples/*.md"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+
+[tool.ruff]
+# Alpha-stage repo. Ignore rules that are stylistic but not bugs.
+# Real issues (E722, F841, syntax errors) are still enforced.
+ignore = [
+    "BLE001",  # blind-except (used for resilience in alpha)
+    "EXE001",  # shebang-not-executable (chmod for run via make)
+    "C408",    # unnecessary dict() call
+    "RUF013",  # implicit Optional
+    "S110",    # try-except-pass
+    "ISC004",  # implicit string concat in collection
+]

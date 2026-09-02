@@ -1,10 +1,10 @@
 """Hegelian Synthesis Expert Implementation."""
 
-from typing import Dict, Any
+from typing import Any
 
 from epistemic_forge.experts.base import EpistemicExpert
-from epistemic_forge.models import ProjectSpec, HegelianDialecticOutput
 from epistemic_forge.llm import generate_structured
+from epistemic_forge.models import HegelianDialecticOutput, ProjectSpec
 
 
 class HegelianExpert(EpistemicExpert):
@@ -15,7 +15,7 @@ class HegelianExpert(EpistemicExpert):
         return "Hegelian_Dialectic_Engine"
 
     def analyze(
-        self, spec: ProjectSpec, context: Dict[str, Any]
+        self, spec: ProjectSpec, context: dict[str, Any]
     ) -> HegelianDialecticOutput:
         """Synthesizes the core question by forcing a steelmanned antithesis."""
         messages = [

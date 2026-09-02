@@ -5,6 +5,7 @@ and rendering the Neuro-Symbolic Claim Lattice visually.
 """
 
 import streamlit as st
+
 from epistemic_forge.pipeline.arsenal_run import run_pipeline
 
 st.set_page_config(page_title="Epistemic Forge", page_icon="🧠", layout="wide")

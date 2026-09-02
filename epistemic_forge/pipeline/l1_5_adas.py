@@ -5,13 +5,14 @@ are insufficient for a highly specific query, this layer dynamically writes
 a custom Pydantic Schema and instantiates a new Expert Node on the fly.
 """
 
-from typing import Dict, Any
-from pydantic import BaseModel, create_model, Field
-from loguru import logger
+from typing import Any
 
-from epistemic_forge.models import ProjectSpec, DynamicExpertSchema
-from epistemic_forge.llm import generate_structured
+from loguru import logger
+from pydantic import BaseModel, Field, create_model
+
 from epistemic_forge.experts.base import EpistemicExpert
+from epistemic_forge.llm import generate_structured
+from epistemic_forge.models import DynamicExpertSchema, ProjectSpec
 
 
 def generate_dynamic_expert(spec: ProjectSpec) -> EpistemicExpert:
@@ -60,7 +61,7 @@ def generate_dynamic_expert(spec: ProjectSpec) -> EpistemicExpert:
         def expert_name(self) -> str:
             return blueprint.expert_class_name
 
-        def analyze(self, spec: ProjectSpec, context: Dict[str, Any]) -> BaseModel:
+        def analyze(self, spec: ProjectSpec, context: dict[str, Any]) -> BaseModel:
             logger.debug(f"Activating dynamically generated expert: {self.expert_name}")
             msgs = [
                 {"role": "system", "content": blueprint.system_prompt},

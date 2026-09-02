@@ -5,12 +5,14 @@ Transforms internal representations into Enterprise-Ready Deliverables:
 - 📓 Jupyter Notebooks (.ipynb) for Kaggle Baselines.
 - 🧠 Obsidian-compatible JSON graphs for Personal Knowledge Management (PKM).
 """
-import os
 import json
 from pathlib import Path
-from loguru import logger
+
 import nbformat as nbf
+from loguru import logger
+
 from epistemic_forge.models import ForgeResult
+
 
 def _generate_mermaid_graph(claims) -> str:
     """Generates a Mermaid.js flowchart from the Claim Lattice."""

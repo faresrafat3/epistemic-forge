@@ -1,13 +1,14 @@
 """L2 Epistemic Synthesis Engine: Semitic NLP & Arabic Logic Expert."""
 
-from epistemic_forge.models import ProjectSpec, HegelianDialecticOutput
+from typing import Any
+
 from epistemic_forge.llm import generate_structured
-from typing import Dict, Any
+from epistemic_forge.models import HegelianDialecticOutput, ProjectSpec
 
 
 def run_semitic_dialectic(
-    spec: ProjectSpec, claims_bundle: Dict[str, Any]
-) -> Dict[str, Any]:
+    spec: ProjectSpec, claims_bundle: dict[str, Any]
+) -> dict[str, Any]:
     """Execute dialectic reasoning specifically optimized for Arabic/Semitic morphological logic."""
     thesis = spec.question
 

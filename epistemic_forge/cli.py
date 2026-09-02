@@ -8,14 +8,15 @@ from __future__ import annotations
 
 import argparse
 import sys
+
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.tree import Tree
 
+from epistemic_forge.memory.economy import budget_manager
 from epistemic_forge.models import ProjectSpec
 from epistemic_forge.pipeline.arsenal_run import run_pipeline
-from epistemic_forge.memory.economy import budget_manager
 
 console = Console()
 

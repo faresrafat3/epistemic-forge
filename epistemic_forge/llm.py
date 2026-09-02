@@ -4,13 +4,15 @@ Absolute flexibility: Use ANY model from ANY provider with zero code changes.
 Supports standard formats: 'openai/gpt-4o', 'anthropic/claude-3-sonnet', 'ollama/llama3', 'azure/...', etc.
 """
 
-from pydantic import BaseModel
-from loguru import logger
-from tenacity import retry, stop_after_attempt, wait_exponential
+import os
+
 import instructor
 from litellm import completion
+from loguru import logger
+from pydantic import BaseModel
+from tenacity import retry, stop_after_attempt, wait_exponential
+
 from epistemic_forge.memory.economy import budget_manager
-import os
 
 # We patch instructor to use LiteLLM's universal completion directly!
 # This is the "Hermes" way: we don't switch clients, we use one universal proxy.
@@ -23,10 +25,6 @@ except Exception as e:
 
 def _offline_fallback(response_model: type[BaseModel], messages: list) -> BaseModel:
     """Deterministic fallback for CI/offline runs without provider credentials."""
-    prompt = ""
-    if messages:
-        prompt = str(messages[-1].get("content", ""))
-    lower = prompt.lower()
     model_name = response_model.__name__
 
     if model_name == "OptimizedInstruction":
@@ -220,6 +218,6 @@ def generate_structured(
 
     except Exception as e:
         logger.error(
-            f"🌐 [Hermes Router] Critical Failure for model '{model}': {str(e)}"
+            f"🌐 [Hermes Router] Critical Failure for model '{model}': {e!s}"
         )
         raise

@@ -1,15 +1,17 @@
 from __future__ import annotations
-from loguru import logger
+
 from dataclasses import dataclass
-from typing import List, Optional
+
+from loguru import logger
 
 from epistemic_forge.memory.reflexion_store import ReflexionStore
 from epistemic_forge.memory.skill_library import SkillLibrary
-from epistemic_forge.models import Domain, ForgeResult, ProjectSpec
+from epistemic_forge.models import Domain, ForgeResult, ProjectSpec, RouteDecision
 from epistemic_forge.pipeline.l1_optimizer import optimize_instruction
 from epistemic_forge.pipeline.l2_conductor import conduct
 from epistemic_forge.pipeline.l3_search import explore
 from epistemic_forge.pipeline.l6_stages import produce_artifacts
+from epistemic_forge.pipeline.router import route_project
 
 
 @dataclass
@@ -20,13 +22,12 @@ class ArsenalRun:
     reflexion: ReflexionStore
 
     @classmethod
-    def create(cls) -> "ArsenalRun":
+    def create(cls) -> ArsenalRun:
         return cls(skills=SkillLibrary(), reflexion=ReflexionStore(window=3))
 
-    def run(self, spec: ProjectSpec, out_dir: Optional[str] = None) -> ForgeResult:
+    def run(self, spec: ProjectSpec, out_dir: str | None = None) -> ForgeResult:
         logger.info(f"Starting ArsenalRun for: {spec.title}")
-        from epistemic_forge.models import RouteDecision
-        
+
         # L0: Semantic Router
         route = route_project(spec)
         logger.info(f"Pipeline dynamically configured: {route.rationale}")
@@ -90,8 +91,8 @@ async def run_pipeline(
     question: str,
     domain: str = "hybrid",
     audience: str = "technical peer / client",
-    keywords: Optional[List[str]] = None,
-    constraints: Optional[List[str]] = None,
+    keywords: list[str] | None = None,
+    constraints: list[str] | None = None,
     max_trials: int = 3,
 ) -> ForgeResult:
     """Convenience API."""
@@ -111,9 +112,8 @@ async def run_pipeline(
     try:
         logger.info(f"Starting Epistemic Forge Pipeline for: '{title}'")
         async for event in ArsenalRun.create().run(spec):
-        yield event
+            yield event
         logger.success("Pipeline execution completed successfully.")
-        return result
     except Exception as e:
-        logger.exception(f"Critical Pipeline Failure: {str(e)}")
+        logger.exception(f"Critical Pipeline Failure: {e!s}")
         raise SystemExit(1)

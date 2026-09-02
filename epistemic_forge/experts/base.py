@@ -6,8 +6,10 @@ and predictable structured outputs within the L2 Conductor.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+from typing import Any
+
 from pydantic import BaseModel
+
 from epistemic_forge.models import ProjectSpec
 
 
@@ -18,10 +20,9 @@ class EpistemicExpert(ABC):
     @abstractmethod
     def expert_name(self) -> str:
         """The formal identifier of the expert (e.g., 'RigorSentinel')."""
-        pass
 
     @abstractmethod
-    def analyze(self, spec: ProjectSpec, context: Dict[str, Any]) -> BaseModel:
+    def analyze(self, spec: ProjectSpec, context: dict[str, Any]) -> BaseModel:
         """
         Executes the expert's specific neuro-symbolic logic.
 
@@ -32,4 +33,3 @@ class EpistemicExpert(ABC):
         Returns:
             A strictly typed Pydantic BaseModel representing the expert's conclusion.
         """
-        pass

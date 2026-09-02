@@ -4,9 +4,11 @@ Replaces rigid heuristics with a Semantic Router that analyzes the
 epistemic complexity of the query to dynamically toggle architectural layers 
 (L1-L6) to save tokens (Cognitive Economy) while maintaining rigor.
 """
-from epistemic_forge.models import ProjectSpec, RouteDecision
-from epistemic_forge.llm import generate_structured
 from loguru import logger
+
+from epistemic_forge.llm import generate_structured
+from epistemic_forge.models import ProjectSpec, RouteDecision
+
 
 def route_project(spec: ProjectSpec) -> RouteDecision:
     """Dynamically routes the project through the optimal cognitive layers."""

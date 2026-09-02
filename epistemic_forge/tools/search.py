@@ -4,9 +4,10 @@ Upgrades basic single-shot RAG to a self-reflective iterative search agent.
 It searches, evaluates if the evidence is sufficient to ground a claim,
 and issues follow-up queries if needed (STORM-style multi-hop).
 """
+
 from duckduckgo_search import DDGS
 from loguru import logger
-from typing import List, Dict
+
 
 def perform_single_search(query: str, max_results: int = 3) -> str:
     """Executes a single DuckDuckGo search."""

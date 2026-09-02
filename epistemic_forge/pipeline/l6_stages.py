@@ -4,11 +4,13 @@ Replaces hardcoded scoring with a true LLM-as-a-Judge Peer Reviewer
 that evaluates the final crystallized artifact against scientific standards.
 """
 
-from epistemic_forge.models import ProjectSpec, FinalPeerReview, StageArtifact
-from epistemic_forge.llm import generate_structured
-from epistemic_forge.pipeline.l4_refine import refine_document
+from typing import Any
+
 from loguru import logger
-from typing import Dict, Any, List
+
+from epistemic_forge.llm import generate_structured
+from epistemic_forge.models import FinalPeerReview, ProjectSpec, StageArtifact
+from epistemic_forge.pipeline.l4_refine import refine_document
 
 
 def _peer_review(spec: ProjectSpec, doc: str, prior_score: float) -> FinalPeerReview:
@@ -38,9 +40,9 @@ def _peer_review(spec: ProjectSpec, doc: str, prior_score: float) -> FinalPeerRe
 def produce_artifacts(
     spec: ProjectSpec,
     final_draft: str,
-    claims_bundle: Dict[str, Any],
+    claims_bundle: dict[str, Any],
     prior_score: float,
-) -> tuple[List[StageArtifact], Dict[str, Any], float]:
+) -> tuple[list[StageArtifact], dict[str, Any], float]:
     """Wraps the pipeline in progressive evaluation stages and produces the final deliverables."""
 
     logger.info("L6 Stages: Initializing final crystallization and review sequence.")
