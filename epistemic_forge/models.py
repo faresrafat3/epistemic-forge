@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
+
+from pydantic import BaseModel, Field
 
 
 class Domain(str, Enum):
@@ -30,8 +31,8 @@ class ProjectSpec(BaseModel):
     question: str
     domain: Domain = Domain.HYBRID
     audience: str = "technical peer / client"
-    constraints: List[str] = Field(default_factory=list)
-    keywords: List[str] = Field(default_factory=list)
+    constraints: list[str] = Field(default_factory=list)
+    keywords: list[str] = Field(default_factory=list)
     budget_tokens: int = 8000
     max_trials: int = 3
     enable_opro_style: bool = True
@@ -39,8 +40,8 @@ class ProjectSpec(BaseModel):
 
     # Hermes Universal Routing Overrides
     target_model: str = "gpt-4o-mini"
-    api_base: str = None
-    api_key: str = None
+    api_base: str | None = None
+    api_key: str | None = None
 
 
 class Claim(BaseModel):
@@ -54,10 +55,10 @@ class Claim(BaseModel):
     potential_falsifier: str = Field(
         description="What specific evidence or scenario would prove this claim wrong?"
     )
-    support: List[str] = Field(
+    support: list[str] = Field(
         default_factory=list, description="Sub-arguments supporting this claim."
     )
-    objections: List[str] = Field(
+    objections: list[str] = Field(
         default_factory=list, description="Valid counter-arguments against this claim."
     )
     confidence: Confidence = Field(default=Confidence.LIKELY)
@@ -66,8 +67,8 @@ class Claim(BaseModel):
 class RouteDecision(BaseModel):
     """L0 router output."""
 
-    families: List[str]
-    activate: Dict[str, bool]
+    families: list[str]
+    activate: dict[str, bool]
     rationale: str
     l1_mode: str = "ape"  # ape | opro | cascade | off
     l3_mode: str = "tot"  # tot | lats | cascade | off
@@ -79,9 +80,9 @@ class SearchNode(BaseModel):
     id: str
     thought: str
     value: float
-    parent_id: Optional[str] = None
-    children: List[str] = Field(default_factory=list)
-    meta: Dict[str, Any] = Field(default_factory=dict)
+    parent_id: str | None = None
+    children: list[str] = Field(default_factory=list)
+    meta: dict[str, Any] = Field(default_factory=dict)
 
 
 class Reflection(BaseModel):
@@ -99,7 +100,7 @@ class Skill(BaseModel):
     name: str
     description: str
     code: str
-    tags: List[str] = Field(default_factory=list)
+    tags: list[str] = Field(default_factory=list)
 
 
 class StageArtifact(BaseModel):
@@ -115,13 +116,13 @@ class ForgeResult(BaseModel):
     spec: ProjectSpec
     route: RouteDecision
     instruction: str
-    claims: List[Claim]
-    search_trace: List[SearchNode]
-    reflections: List[Reflection]
-    skills_used: List[str]
-    artifacts: List[StageArtifact]
-    peer_review: Dict[str, Any]
-    trial_log: List[Dict[str, Any]] = Field(default_factory=list)
+    claims: list[Claim]
+    search_trace: list[SearchNode]
+    reflections: list[Reflection]
+    skills_used: list[str]
+    artifacts: list[StageArtifact]
+    peer_review: dict[str, Any]
+    trial_log: list[dict[str, Any]] = Field(default_factory=list)
     final_score: float = 0.0
 
 
@@ -143,7 +144,7 @@ class KaggleExpertOutput(BaseModel):
     baseline_architecture: str = Field(
         description="Simple, robust baseline model recommendation."
     )
-    critical_flaws: List[str] = Field(
+    critical_flaws: list[str] = Field(
         description="Potential pitfalls in the feature engineering."
     )
 
@@ -154,7 +155,7 @@ class DialecticExpertOutput(BaseModel):
     core_thesis: str
     antithesis: str
     synthesis: str
-    logical_fallacies_avoided: List[str]
+    logical_fallacies_avoided: list[str]
 
 
 class WritingExpertOutput(BaseModel):
@@ -162,19 +163,18 @@ class WritingExpertOutput(BaseModel):
 
     tone_consistency_score: float
     structural_flow: str
-    draft_paragraphs: List[str]
+    draft_paragraphs: list[str]
 
 
 # ==========================================
 # L2 SYNTHESIS ENGINE SCHEMAS (NEURO-SYMBOLIC)
 # ==========================================
-from pydantic import BaseModel, Field
 
 
 class RigorSentinelOutput(BaseModel):
     """Strict schema for the Leakage & Rigor Sentinel (formerly Kaggle Expert)."""
 
-    epistemic_blind_spots: List[str] = Field(
+    epistemic_blind_spots: list[str] = Field(
         description="Hidden assumptions or target leakage risks in the user's premise."
     )
     falsification_metric: str = Field(
@@ -194,7 +194,7 @@ class HegelianDialecticOutput(BaseModel):
     synthesis_resolution: str = Field(
         description="The nuanced truth that reconciles the thesis and the antithesis."
     )
-    remaining_uncertainties: List[str] = Field(
+    remaining_uncertainties: list[str] = Field(
         description="Questions that still lack sufficient evidence."
     )
     epistemic_confidence: float = Field(
@@ -221,7 +221,7 @@ class ChainOfDensityOutput(BaseModel):
 class ClaimLatticeOutput(BaseModel):
     """A strict output schema containing multiple grounded claims."""
 
-    claims: List[Claim]
+    claims: list[Claim]
     lattice_summary: str = Field(
         description="A short summary of how these claims interlock."
     )
@@ -236,7 +236,7 @@ class OptimizedInstruction(BaseModel):
     rationale: str = Field(
         description="Why this instruction will yield better results than a generic prompt."
     )
-    expected_failure_modes: List[str] = Field(
+    expected_failure_modes: list[str] = Field(
         description="What the LLM might get wrong if not guided properly."
     )
 
@@ -250,7 +250,7 @@ class ThoughtProposal(BaseModel):
 class ThoughtProposalsOutput(BaseModel):
     """Collection of proposed thoughts for branching."""
 
-    proposals: List[ThoughtProposal]
+    proposals: list[ThoughtProposal]
 
 
 class ThoughtEvaluation(BaseModel):
@@ -275,7 +275,7 @@ class RefinementFeedback(BaseModel):
         le=1.0,
         description="Presence of explicit boundaries, assumptions, and falsifiers.",
     )
-    critical_flaws: List[str] = Field(
+    critical_flaws: list[str] = Field(
         description="List of logical leaps, hallucinations, or unsupported claims."
     )
     passes_threshold: bool = Field(
@@ -289,7 +289,7 @@ class RefinedArtifact(BaseModel):
     improved_text: str = Field(
         description="The heavily revised, flawless version of the text."
     )
-    changes_made: List[str] = Field(description="What was fixed based on the critique.")
+    changes_made: list[str] = Field(description="What was fixed based on the critique.")
 
 
 class PeerReviewScores(BaseModel):
@@ -305,7 +305,7 @@ class FinalPeerReview(BaseModel):
 
     scores: PeerReviewScores
     overall_score: float = Field(ge=0.0, le=1.0, description="Average of all metrics.")
-    revision_needed: List[str] = Field(description="Areas that still need work if any.")
+    revision_needed: list[str] = Field(description="Areas that still need work if any.")
     verdict: str = Field(
         description="Must be one of: 'accept', 'accept_with_minor_revisions', 'major_revisions', 'reject'"
     )
@@ -321,7 +321,7 @@ class DynamicExpertSchema(BaseModel):
         description="Name of the expert, e.g., 'QuantumMechanicsExpert'"
     )
     expert_description: str = Field(description="What this expert analyzes.")
-    fields_to_extract: List[Dict[str, str]] = Field(
+    fields_to_extract: list[dict[str, str]] = Field(
         description="List of fields the expert must extract. Format: {'field_name': 'description'}"
     )
     system_prompt: str = Field(
@@ -331,6 +331,6 @@ class DynamicExpertSchema(BaseModel):
 
 class SearchResult(BaseModel):
     best_thought: str
-    nodes: List[SearchNode]
+    nodes: list[SearchNode]
     mode_used: str
     score: float

@@ -1,21 +1,23 @@
 """L0 — Semantic Technique Router (SOTA LLM-Based Routing).
 
-Replaces rigid heuristics with a Semantic Router that analyzes the 
-epistemic complexity of the query to dynamically toggle architectural layers 
+Replaces rigid heuristics with a Semantic Router that analyzes the
+epistemic complexity of the query to dynamically toggle architectural layers
 (L1-L6) to save tokens (Cognitive Economy) while maintaining rigor.
 """
-from epistemic_forge.models import ProjectSpec, RouteDecision
-from epistemic_forge.llm import generate_structured
 from loguru import logger
+
+from epistemic_forge.llm import generate_structured
+from epistemic_forge.models import ProjectSpec, RouteDecision
+
 
 def route_project(spec: ProjectSpec) -> RouteDecision:
     """Dynamically routes the project through the optimal cognitive layers."""
-    
+
     logger.info("L0 Router: Analyzing epistemic complexity to dynamically route execution...")
-    
+
     messages = [
         {
-            "role": "system", 
+            "role": "system",
             "content": (
                 "You are an Elite L0 Architectural Router. Analyze the user's inquiry and determine exactly which cognitive layers are required to solve it. "
                 "If it's a simple query, turn off heavy layers (like L3 Tree Search) to save compute. "
@@ -24,7 +26,7 @@ def route_project(spec: ProjectSpec) -> RouteDecision:
         },
         {"role": "user", "content": f"Inquiry: {spec.question}\nDomain: {spec.domain}\n\nDetermine the optimal routing architecture."}
     ]
-    
+
     try:
         decision: RouteDecision = generate_structured(
             messages=messages,

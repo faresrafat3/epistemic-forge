@@ -1,7 +1,7 @@
 """Epistemic Forge — ARSENAL-powered research & writing kit."""
 
-from .pipeline.arsenal_run import ArsenalRun, run_pipeline
 from .models import Claim, ForgeResult, ProjectSpec
+from .pipeline.arsenal_run import ArsenalRun, run_pipeline
 
 __version__ = "0.1.0"
 __all__ = [

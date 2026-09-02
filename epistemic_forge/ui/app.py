@@ -5,6 +5,7 @@ and rendering the Neuro-Symbolic Claim Lattice visually.
 """
 
 import streamlit as st
+
 from epistemic_forge.pipeline.arsenal_run import run_pipeline
 
 st.set_page_config(page_title="Epistemic Forge", page_icon="🧠", layout="wide")
@@ -46,7 +47,8 @@ if st.button("Ignite Synthesis Pipeline", type="primary"):
                     title=title,
                     question=question,
                     domain=domain,
-                    # Further deep integration needed to pass model_choice strictly to the run.
+                    target_model=model_choice,
+                    api_base=api_base or None,
                 )
 
                 st.success("Synthesis Complete.")
@@ -55,11 +57,7 @@ if st.button("Ignite Synthesis Pipeline", type="primary"):
                 if hasattr(result, "claims"):
                     st.markdown("### 🌳 Epistemic Claim Lattice")
                     for claim in result.claims:
-                        c_dict = (
-                            claim.model_dump()
-                            if hasattr(claim, "model_dump")
-                            else claim
-                        )
+                        c_dict = claim.model_dump()
                         with st.expander(f"Claim: {c_dict.get('text', '')}"):
                             st.write("**Supports:**")
                             for s in c_dict.get("support", []):

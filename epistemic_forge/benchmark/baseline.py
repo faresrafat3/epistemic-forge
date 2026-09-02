@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-from typing import List
 
-
-def baseline_answer(title: str, question: str, domain: str, keywords: List[str]) -> str:
+def baseline_answer(title: str, question: str, domain: str, keywords: list[str]) -> str:
     """Produce a short unstructured answer — typical one-shot Q&A quality."""
     kw = ", ".join(keywords) if keywords else "the main themes"
     # Deliberately thin: claim-ish sentence, weak support, no rebuttal structure

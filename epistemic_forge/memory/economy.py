@@ -4,8 +4,8 @@ Ensures the pipeline respects the user's budget and gracefully degrades
 or halts if the API costs exceed the specified limits.
 """
 
-from loguru import logger
 import litellm
+from loguru import logger
 
 
 class TokenBudgetManager:
@@ -13,7 +13,7 @@ class TokenBudgetManager:
 
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super(TokenBudgetManager, cls).__new__(cls)
+            cls._instance = super().__new__(cls)
             cls._instance.reset()
         return cls._instance
 
@@ -37,7 +37,8 @@ class TokenBudgetManager:
                         completion_response=response_object
                     )
                     self.total_cost += cost
-                except:
+                except Exception:  # noqa: S110  best-effort cost tracking
+                    # Cost calculation is best-effort; ignore provider mismatches.
                     pass
         except Exception as e:
             logger.debug(f"Could not track token usage: {e}")
