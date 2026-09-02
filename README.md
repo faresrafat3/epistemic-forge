@@ -8,7 +8,9 @@
 
 **A Neuro-Symbolic State Machine for LLMs.**
 
-Instead of chatty, unpredictable multi-agent systems that burn tokens, we use a deterministic **L0–L6 pipeline**. We enforce strict Toulmin-based Pydantic schemas at every node, allowing you to extract GPT-4 level deep tree-search and expert dialectics from *any* model with **100% predictable output shapes**.
+Instead of chatty, unpredictable multi-agent systems that burn tokens, we use a deterministic **L0–L6 pipeline**. We enforce strict Toulmin-based Pydantic schemas at every node, allowing you to extract GPT-4 level deep tree-search and expert dialectics from *any* model with **deterministic output schemas**.
+
+> **Status:** v1.0.0-rc1. The package is installable; tested end-to-end on 10 benchmark cases. Cost / token numbers in older marketing-style copy are *not* benchmarked — see `docs/benchmark/BENCHMARK.md` for what was actually measured (overall quality +0.633 vs baseline, Toulmin coverage +0.600, on 10 cases).
 
 </div>
 
@@ -21,7 +23,7 @@ This engine was brutally refactored to represent the bleeding edge of AI researc
 - 🌐 **Hermes Universal Routing:** Powered by `LiteLLM` and `Instructor`, you can swap the cognitive engine instantly. Use `openai/gpt-4o-mini`, `anthropic/claude-3-5-sonnet`, or `ollama/llama3` without changing a line of code.
 - 🧬 **ADAS (Automated Design of Agentic Systems):** If your query is too niche, the L1.5 layer dynamically programs a brand-new Pydantic Schema and Python Expert Class at runtime to solve it.
 - ⚖️ **Process Reward Models (PRM):** Our L3 Tree Search doesn't just guess. It uses an LLM-as-a-Judge to evaluate its own thoughts step-by-step, executing immediate rollbacks if it detects a logical fallacy (Test-Time Compute).
-- 🌍 **Live Empirical Grounding (Zero-Cost RAG):** Before reasoning, the system executes a live web search (via DuckDuckGo) to fetch the scientific consensus. **No confident mush. No hallucinations.** Every claim requires an `epistemic_warrant` and a `potential_falsifier`.
+- 🌍 **Live Empirical Grounding (RAG):** Before reasoning, the system executes a live web search (via DuckDuckGo) to fetch the scientific consensus. Every claim requires an `epistemic_warrant` and a `potential_falsifier` (reduces ungrounded claims; does not eliminate hallucinations).
 - 🛡️ **Adversarial Self-Refine:** The L4 layer acts as a ruthless NeurIPS-level peer reviewer, aggressively critiquing the draft and forcing rewrites until it passes the threshold.
 - 💰 **Cognitive Economy Tracker:** Built-in Token Budgeting. If the system approaches your budget limit mid-search, it halts the expensive tree expansion and safely falls back to the crystallization phase.
 
@@ -60,24 +62,24 @@ Please see our [Contributing Guidelines](CONTRIBUTING.md) and [PR Template](.git
   <em>Built with precision — from Cairo to the open web.</em>
 </div>
 
-## 🏢 Why Epistemic Forge? (Enterprise Metrics vs Alternatives)
+## 🏢 Why Epistemic Forge? (Measured vs Marketing)
 
-When evaluating AI reasoning architectures for production, executives and researchers must balance **Intelligence, Determinism, and Cost**. Here is how Epistemic Forge dominates the 2026 landscape:
+What was actually benchmarked vs what is qualitative opinion.
 
 ### 1. vs. Vanilla LLMs (ChatGPT / Claude 3.5 Sonnet directly)
-* **The Problem:** Single-shot LLMs suffer from "Confident Mush." They will confidently hallucinate an answer without rigorous warrants.
-* **The Epistemic Forge Edge:** We enforce **Toulmin Lattices**. The system will hard-fail rather than lie. It requires an `epistemic_warrant` and a `potential_falsifier` for every node. 
-* **Cost Difference:** EF achieves GPT-4-level reasoning using cheap models (e.g., `gpt-4o-mini` or `Llama 3 8B`) via our PRM Tree Search, **saving up to 85% on API inference costs**.
+* **The Problem:** Single-shot LLMs can produce confident but ungrounded answers.
+* **The Epistemic Forge Edge:** We enforce **Toulmin Lattices**. The system requires an `epistemic_warrant` and a `potential_falsifier` for every node.
+* **Measured:** On 10 benchmark cases, EF outputs averaged overall quality **0.951** vs the baseline **0.319** (+0.633 lift, full report: `docs/benchmark/BENCHMARK.md`).
 
 ### 2. vs. Conversational Agents (CrewAI / AutoGen)
-* **The Problem:** Chat-based multi-agent systems burn massive context windows as agents "talk" to each other in natural language.
-* **The Epistemic Forge Edge:** **Token Economy & Determinism.** We use Neuro-Symbolic State Machines. Experts communicate strictly via Pydantic JSON schemas, eliminating conversational bloat.
-* **Cost Difference:** EF consumes **~80% fewer tokens per query**, preventing API bankruptcy.
+* **The Problem:** Chat-based multi-agent systems burn context windows as agents "talk" in natural language.
+* **The Epistemic Forge Edge:** **Token Economy & Determinism.** Neuro-Symbolic State Machines; experts communicate via Pydantic JSON schemas.
+* **Not measured:** specific token / cost ratios vs CrewAI or AutoGen on the same workload — qualitative opinion only.
 
 ### 3. vs. Build-it-Yourself Frameworks (LangGraph / DSPy)
-* **The Problem:** LangGraph is a powerful graph framework, but you start with a blank slate. You have to spend months writing the cognitive logic.
-* **The Epistemic Forge Edge:** **Out-of-the-box SOTA.** EF comes pre-installed with bleeding-edge cognitive nodes: *Automated Design of Agentic Systems (ADAS)*, *Process Reward Models (PRM)*, and *Hegelian Synthesis*. 
-* **Cost Difference:** Saves **2-3 months of Lead AI Engineer payroll**.
+* **The Problem:** LangGraph is a powerful graph framework, but you start with a blank slate.
+* **The Epistemic Forge Edge:** Pre-installed cognitive nodes (ADAS, PRM, Hegelian Synthesis).
+* **Qualitative:** time-to-first-useful-output is the relevant metric; the absolute ROI depends on your team and use case.
 
 ## 📈 Enterprise Use-Cases
 
